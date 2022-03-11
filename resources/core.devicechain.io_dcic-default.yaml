@@ -1,0 +1,43 @@
+apiVersion: core.devicechain.io/v1beta1
+kind: InstanceConfiguration
+metadata:
+  creationTimestamp: null
+  name: dcic-default
+spec:
+  configuration:
+    Infrastructure:
+      Grpc:
+        BackoffMultiplier: 1.5
+        InitialBackoffSeconds: 10
+        MaxBackoffSeconds: 600
+        MaxRetryCount: 6
+        ResolveFQDN: false
+      Kafka:
+        DefaultTopicPartitions: 8
+        DefaultTopicReplicationFactor: 3
+        Hostname: dc-kafka-kafka-bootstrap
+        Port: 9092
+      Metrics:
+        Enabled: true
+        HttpPort: 9090
+      Redis:
+        Hostname: dc-infrastructure-redis-ha-announce
+        MasterGroupName: devicechain
+        NodeCount: 3
+        Port: 26379
+    Persistence:
+      Rdb:
+        Configuration:
+          hostname: dc-postgresql.sitewhere-system
+          maxConnections: 5
+          password: syncope
+          port: 5432
+          username: syncope
+        Type: postgres95
+      Tsdb:
+        Configuration:
+          databaseName: tenant_${tenant.id}
+          hostname: dc-infrastructure-influxdb.sitewhere-system
+          port: 8086
+        Type: influxdb
+status: {}
