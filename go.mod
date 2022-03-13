@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/devicechain-io/dc-k8s v0.0.0
 	github.com/devicechain-io/dc-microservice v0.0.0
+	github.com/devicechain-io/dc-devicemanagement v0.0.0
 	github.com/fatih/color v1.13.0
 	github.com/pytimer/k8sutil v0.0.0-20220203142443-87b1dfb13ebc
 	github.com/spf13/cobra v1.4.0
@@ -12,6 +13,7 @@ require (
 )
 
 require (
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
 	github.com/go-logr/logr v1.2.2 // indirect
@@ -29,7 +31,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/rs/zerolog v1.26.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a // indirect
@@ -55,5 +56,5 @@ require (
 )
 
 replace github.com/devicechain-io/dc-k8s v0.0.0 => ../dc-k8s
-
 replace github.com/devicechain-io/dc-microservice v0.0.0 => ../dc-microservice
+replace github.com/devicechain-io/dc-devicemanagement v0.0.0 => ../dc-devicemanagement

@@ -22,7 +22,7 @@ var createInstanceCmd = NewCreateInstanceCommand()
 // Create command that will create a new instance
 func NewCreateInstanceCommand() *cobra.Command {
 	return &cobra.Command{
-		Use:          "instance instance_id",
+		Use:          "instance instance_id config_id",
 		Short:        "Create a new DeviceChain instance",
 		Long:         `Creates a new DeviceChain instance`,
 		SilenceUsage: true,
@@ -38,6 +38,9 @@ func createInstance(args []string, name string, desc string) error {
 	if len(args) < 1 {
 		return errors.New("no instance id passed for new DeviceChain instance")
 	}
+	if len(args) < 2 {
+		return errors.New("no configuration id passed for new DeviceChain instance")
+	}
 
 	req := buildInstanceRequestFromArgs(args, name, desc)
 	_, err := v1beta1.CreateInstance(req)
@@ -52,6 +55,7 @@ func createInstance(args []string, name string, desc string) error {
 func buildInstanceRequestFromArgs(args []string, name string, desc string) v1beta1.InstanceCreateRequest {
 	now := time.Now()
 	id := args[0]
+	configId := args[1]
 
 	// Default name if not passed
 	if name == "" {
@@ -61,7 +65,7 @@ func buildInstanceRequestFromArgs(args []string, name string, desc string) v1bet
 	if desc == "" {
 		desc = fmt.Sprintf("DeviceChain instance '%s' created on %s", id, now.Format(time.RFC3339))
 	}
-	return v1beta1.InstanceCreateRequest{Id: id, Name: name, Description: desc}
+	return v1beta1.InstanceCreateRequest{Id: id, ConfigurationId: configId, Name: name, Description: desc}
 }
 
 func init() {

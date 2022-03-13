@@ -1,0 +1,12 @@
+apiVersion: core.devicechain.io/v1beta1
+kind: MicroserviceConfiguration
+metadata:
+  creationTimestamp: null
+  name: device-management-default
+spec:
+  configuration:
+    Nested:
+      Test: test
+  functionalArea: device-management
+  image: devicechain.io/devicemanagament:v0.0.0
+status: {}

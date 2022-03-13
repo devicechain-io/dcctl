@@ -47,7 +47,7 @@ func createTenant(args []string, name string, desc string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf(color.HiGreenString("Created DeviceChain tenant '%s' successfully.\n"), args[0])
+	fmt.Printf(color.HiGreenString("Created DeviceChain tenant '%s' successfully.\n"), args[1])
 	return nil
 }
 
