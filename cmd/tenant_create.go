@@ -65,7 +65,7 @@ func buildTenantRequestFromArgs(args []string, name string, desc string) v1beta1
 	if desc == "" {
 		desc = fmt.Sprintf("DeviceChain tenant '%s' created on %s", tenantId, now.Format(time.RFC3339))
 	}
-	return v1beta1.TenantCreateRequest{InstanceId: instanceId, Id: tenantId, Name: name, Description: desc}
+	return v1beta1.TenantCreateRequest{InstanceId: instanceId, TenantId: tenantId, Name: name, Description: desc}
 }
 
 func init() {
