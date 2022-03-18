@@ -11,8 +11,9 @@ import (
 	"os"
 	"path/filepath"
 
-	dm "github.com/devicechain-io/dc-devicemanagement/config"
-	dci "github.com/devicechain-io/dc-microservice/config"
+	dmgen "github.com/devicechain-io/dc-devicemanagement/generator"
+	gen "github.com/devicechain-io/dc-k8s/generators"
+	ms "github.com/devicechain-io/dc-microservice/config"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -37,7 +38,7 @@ var resgenCmd = &cobra.Command{
 
 		// Generate resources for each microservice
 		fmt.Println(GreenUnderline("\nMicroservice Resources"))
-		err = generateMicroserviceResources(dm.ResourceProvider{})
+		err = generateMicroserviceResources(dmgen.ResourceProvider{})
 		if err != nil {
 			return err
 		}
@@ -45,9 +46,28 @@ var resgenCmd = &cobra.Command{
 	},
 }
 
+// Get instance configuration CRs that should be created in tooling
+func getInstanceResources() ([]gen.ConfigurationResource, error) {
+	resources := make([]gen.ConfigurationResource, 0)
+
+	name := "dcic-default"
+	config := ms.NewDefaultInstanceConfiguration()
+	content, err := gen.GenerateInstanceConfig(name, config)
+	if err != nil {
+		return nil, err
+	}
+	dcidefault := gen.ConfigurationResource{
+		Name:    fmt.Sprintf("%s_%s", "core.devicechain.io", name),
+		Content: content,
+	}
+
+	resources = append(resources, dcidefault)
+	return resources, nil
+}
+
 // Generate instance resources by introspecting microservice configs
 func generateInstanceResources() error {
-	dcires, err := dci.GetConfigurationResources()
+	dcires, err := getInstanceResources()
 	if err != nil {
 		return err
 	}
@@ -64,20 +84,22 @@ func generateInstanceResources() error {
 }
 
 // Generate microservice resources by introspecting microservice configs
-func generateMicroserviceResources(prov dci.ConfigurationResourceProvider) error {
-	dcires, err := prov.GetConfigurationResources()
-	if err != nil {
-		return err
-	}
-	for _, dci := range dcires {
-		path := filepath.Join(GenResFolder, fmt.Sprintf("%s.yaml", dci.Name))
-		err = os.WriteFile(path, dci.Content, 0644)
+func generateMicroserviceResources(providers ...gen.ConfigurationResourceProvider) error {
+	for _, prov := range providers {
+		dcires, err := prov.GetConfigurationResources()
 		if err != nil {
 			return err
 		}
-		fmt.Printf(color.GreenString("Generated microservice resource: %s\n"), color.HiWhiteString(path))
+		for _, dci := range dcires {
+			path := filepath.Join(GenResFolder, fmt.Sprintf("%s.yaml", dci.Name))
+			err = os.WriteFile(path, dci.Content, 0644)
+			if err != nil {
+				return err
+			}
+			fmt.Printf(color.GreenString("Generated microservice resource: %s\n"), color.HiWhiteString(path))
+		}
+		fmt.Println()
 	}
-	fmt.Println()
 	return nil
 }
 

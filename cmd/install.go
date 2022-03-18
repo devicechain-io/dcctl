@@ -17,7 +17,7 @@ import (
 
 	v1beta1 "github.com/devicechain-io/dc-k8s/api/v1beta1"
 	dck8s "github.com/devicechain-io/dc-k8s/config"
-	dcms "github.com/devicechain-io/dc-microservice/config"
+	gen "github.com/devicechain-io/dc-k8s/generators"
 
 	"github.com/pytimer/k8sutil/apply"
 	"github.com/spf13/cobra"
@@ -91,8 +91,8 @@ func NewInstallCommand() *cobra.Command {
 }
 
 // Gather all manifest content from the embedded files
-func getManifestContent(manifests embed.FS) ([]dcms.ConfigurationResource, error) {
-	resources := make([]dcms.ConfigurationResource, 0)
+func getManifestContent(manifests embed.FS) ([]gen.ConfigurationResource, error) {
+	resources := make([]gen.ConfigurationResource, 0)
 	err := fs.WalkDir(manifests, "crd/bases", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -112,7 +112,7 @@ func getManifestContent(manifests embed.FS) ([]dcms.ConfigurationResource, error
 		if err != nil {
 			return err
 		}
-		resources = append(resources, dcms.ConfigurationResource{
+		resources = append(resources, gen.ConfigurationResource{
 			Name:    path,
 			Content: b,
 		})
