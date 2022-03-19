@@ -8,5 +8,5 @@ spec:
     Nested:
       Test: test
   functionalArea: device-management
-  image: devicechain.io/devicemanagament:v0.0.0
+  image: devicechain-io/device-management:0.0.1
 status: {}
