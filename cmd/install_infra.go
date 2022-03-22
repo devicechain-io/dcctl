@@ -55,7 +55,12 @@ func NewInstallInfraCommand() *cobra.Command {
 		Long:         `Installs and configures DeviceChain infrastructure dependencies`,
 		SilenceUsage: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return installInfraComponents()
+			uninstall, _ := cmd.Flags().GetBool("uninstall")
+			if uninstall {
+				return uninstallInfraComponents()
+			} else {
+				return installInfraComponents()
+			}
 		},
 	}
 }
@@ -94,6 +99,12 @@ func installInfraComponents() error {
 	}
 
 	return nil
+}
+
+// Uninstall infrastructure components.
+func uninstallInfraComponents() error {
+	settings := cli.New()
+	return uninstallHelmReleases(settings)
 }
 
 // Assure that
@@ -276,6 +287,21 @@ func uninstallHelmRelease(settings *cli.EnvSettings, chart *ChartInfo) (*release
 	return uninstallAction.Run(chart.Release)
 }
 
+// Parse a filename into chart info.
+func parseChartInfo(d fs.DirEntry) (*ChartInfo, error) {
+	parts := strings.Split(strings.TrimSuffix(d.Name(), ".properties"), "_")
+	if len(parts) != 4 {
+		return nil, errors.New("chart filename must have exactly 4 parts separated by underscores")
+	}
+	cinfo := &ChartInfo{
+		Repository: parts[1],
+		Chart:      parts[2],
+		Version:    parts[3],
+		Release:    "dc-" + parts[2],
+	}
+	return cinfo, nil
+}
+
 // Create Helm releases for each chart embedded in the binary.
 func createHelmReleases(settings *cli.EnvSettings) error {
 	fmt.Println(color.HiGreenString("\nInstalling Helm charts..."))
@@ -284,15 +310,9 @@ func createHelmReleases(settings *cli.EnvSettings) error {
 			return err
 		}
 		if !d.IsDir() {
-			parts := strings.Split(strings.TrimSuffix(d.Name(), ".properties"), "_")
-			if len(parts) != 4 {
-				return errors.New("chart filename must have exactly 4 parts separated by underscores")
-			}
-			cinfo := &ChartInfo{
-				Repository: parts[1],
-				Chart:      parts[2],
-				Version:    parts[3],
-				Release:    "dc-" + parts[2],
+			cinfo, err := parseChartInfo(d)
+			if err != nil {
+				return err
 			}
 			fmt.Printf("Installing Helm Chart: Repository: %s Chart: %s Version: %s Release: %s\n",
 				color.HiGreenString(cinfo.Repository),
@@ -326,6 +346,35 @@ func createHelmReleases(settings *cli.EnvSettings) error {
 	})
 }
 
+// Uninstall Helm releases for each chart embedded in the binary.
+func uninstallHelmReleases(settings *cli.EnvSettings) error {
+	fmt.Println(color.HiGreenString("\nUninstalling Helm charts..."))
+	return fs.WalkDir(ChartFS, "install_infra/charts", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() {
+			cinfo, err := parseChartInfo(d)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("Uninstalling Helm Chart: Repository: %s Chart: %s Version: %s Release: %s\n",
+				color.HiGreenString(cinfo.Repository),
+				color.HiGreenString(cinfo.Chart),
+				color.HiGreenString(cinfo.Version),
+				color.HiGreenString(cinfo.Release),
+			)
+
+			_, err = uninstallHelmRelease(settings, cinfo)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
 func init() {
 	rootCmd.AddCommand(installInfraCmd)
+	installInfraCmd.Flags().BoolP("uninstall", "u", false, "Uninstall DeviceChain Infrastructure")
 }
