@@ -8,10 +8,14 @@ package cmd
 
 import (
 	"context"
+	"embed"
 	"errors"
 	"fmt"
+	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 
 	corev1beta1 "github.com/devicechain-io/dc-k8s/api/v1beta1"
 	"github.com/fatih/color"
@@ -20,13 +24,24 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/spf13/cobra"
+	"helm.sh/helm/v3/pkg/action"
+	"helm.sh/helm/v3/pkg/chart"
+	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/cli"
+	"helm.sh/helm/v3/pkg/cli/values"
+	"helm.sh/helm/v3/pkg/downloader"
 	"helm.sh/helm/v3/pkg/getter"
+	"helm.sh/helm/v3/pkg/release"
 	"helm.sh/helm/v3/pkg/repo"
 )
 
 const (
 	NS_DC_SYSTEM = "dc-system"
+)
+
+var (
+	//go:embed install_infra/charts/*
+	ChartFS embed.FS
 )
 
 // Create instance of install infra command
@@ -59,13 +74,21 @@ func installInfraComponents() error {
 	if err != nil && !os.IsExist(err) {
 		return err
 	}
-	// Test adding an entry.
-	entry := &repo.Entry{
-		Name: "bitnami",
-		URL:  "https://charts.bitnami.com/bitnami",
+
+	// Add repositories required for infrastructure.
+	entries := []*repo.Entry{
+		{
+			Name: "bitnami",
+			URL:  "https://charts.bitnami.com/bitnami",
+		},
+	}
+	err = addHelmRepositories(entries, settings, rfile)
+	if err != nil {
+		return err
 	}
 
-	err = addHelmRepository(entry, settings, rfile)
+	// Create Helm releases from embedded charts.
+	err = createHelmReleases(settings)
 	if err != nil {
 		return err
 	}
@@ -120,32 +143,187 @@ func assureHelmRepositoryConfig(settings *cli.EnvSettings) (*repo.File, error) {
 }
 
 // Add Helm repository to configuration
-func addHelmRepository(entry *repo.Entry, settings *cli.EnvSettings, rfile *repo.File) error {
-	fmt.Printf(color.WhiteString("Checking repository '%s' ... "), entry.Name)
-	if rfile.Has(entry.Name) {
-		fmt.Println(color.HiGreenString("FOUND"))
-		return nil
-	}
+func addHelmRepositories(entries []*repo.Entry, settings *cli.EnvSettings, rfile *repo.File) error {
+	for _, entry := range entries {
+		fmt.Printf(color.WhiteString("Checking repository '%s' ... "), entry.Name)
+		if rfile.Has(entry.Name) {
+			fmt.Println(color.HiGreenString("FOUND"))
+			return nil
+		}
 
-	// Pull index file to verify..
-	r, err := repo.NewChartRepository(entry, getter.All(settings))
-	if err != nil {
-		return err
-	}
-	_, err = r.DownloadIndexFile()
-	if err != nil {
-		return err
-	}
+		// Pull index file to verify..
+		r, err := repo.NewChartRepository(entry, getter.All(settings))
+		if err != nil {
+			return err
+		}
+		_, err = r.DownloadIndexFile()
+		if err != nil {
+			return err
+		}
 
-	// Update repositories list.
-	rfile.Update(entry)
-	err = rfile.WriteFile(settings.RepositoryConfig, 0755)
-	if err != nil {
-		return err
+		// Update repositories list.
+		rfile.Update(entry)
+		err = rfile.WriteFile(settings.RepositoryConfig, 0755)
+		if err != nil {
+			return err
+		}
+		fmt.Println(color.HiGreenString("ADDED"))
 	}
-	fmt.Println(color.HiGreenString("ADDED"))
-
 	return nil
+}
+
+// Log output used for helm debugging.
+func helmDebug(format string, v ...interface{}) {
+	fmt.Println(color.WhiteString(fmt.Sprintf(format, v...)))
+}
+
+type ChartInfo struct {
+	Repository string
+	Chart      string
+	Version    string
+	Release    string
+}
+
+// Determine whether chart is installable.
+func isChartInstallable(ch *chart.Chart) (bool, error) {
+	switch ch.Metadata.Type {
+	case "", "application":
+		return true, nil
+	}
+	return false, fmt.Errorf("%s charts are not installable", ch.Metadata.Type)
+}
+
+// Create a release for a Helm chart.
+func createHelmRelease(settings *cli.EnvSettings, chart *ChartInfo, overrides []string) (*release.Release, error) {
+	actionConfig := new(action.Configuration)
+	if err := actionConfig.Init(settings.RESTClientGetter(), NS_DC_SYSTEM, os.Getenv("HELM_DRIVER"), helmDebug); err != nil {
+		return nil, err
+	}
+	installAction := action.NewInstall(actionConfig)
+	installAction.Namespace = NS_DC_SYSTEM
+	installAction.ReleaseName = chart.Release
+	installAction.CreateNamespace = false
+	installAction.SkipCRDs = true
+	installAction.Wait = false
+	installAction.Version = chart.Version
+
+	// Locate path to chart.
+	cp, err := installAction.ChartPathOptions.LocateChart(fmt.Sprintf("%s/%s", chart.Repository, chart.Chart), settings)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create values that will be passed to chart.
+	p := getter.All(settings)
+	valueOpts := &values.Options{
+		Values: overrides,
+	}
+	vals, err := valueOpts.MergeValues(p)
+	if err != nil {
+		return nil, err
+	}
+
+	// Load chart from established path.
+	chartRequested, err := loader.Load(cp)
+	if err != nil {
+		return nil, err
+	}
+
+	// Verify chart is installable.
+	validInstallableChart, err := isChartInstallable(chartRequested)
+	if !validInstallableChart {
+		return nil, err
+	}
+
+	// Download dependencies.
+	if req := chartRequested.Metadata.Dependencies; req != nil {
+		if err := action.CheckDependencies(chartRequested, req); err != nil {
+			if installAction.DependencyUpdate {
+				man := &downloader.Manager{
+					Out:              os.Stdout,
+					ChartPath:        cp,
+					Keyring:          installAction.ChartPathOptions.Keyring,
+					SkipUpdate:       false,
+					Getters:          p,
+					RepositoryConfig: settings.RepositoryConfig,
+					RepositoryCache:  settings.RepositoryCache,
+				}
+				if err := man.Update(); err != nil {
+					return nil, err
+				}
+			} else {
+				return nil, err
+			}
+		}
+	}
+
+	// Run the action to create a release.
+	release, err := installAction.Run(chartRequested, vals)
+	if err != nil {
+		return nil, err
+	}
+
+	return release, nil
+}
+
+// Uninstall a Helm release.
+func uninstallHelmRelease(settings *cli.EnvSettings, chart *ChartInfo) (*release.UninstallReleaseResponse, error) {
+	actionConfig := new(action.Configuration)
+	if err := actionConfig.Init(settings.RESTClientGetter(), NS_DC_SYSTEM, os.Getenv("HELM_DRIVER"), helmDebug); err != nil {
+		return nil, err
+	}
+	uninstallAction := action.NewUninstall(actionConfig)
+	return uninstallAction.Run(chart.Release)
+}
+
+// Create Helm releases for each chart embedded in the binary.
+func createHelmReleases(settings *cli.EnvSettings) error {
+	fmt.Println(color.HiGreenString("\nInstalling Helm charts..."))
+	return fs.WalkDir(ChartFS, "install_infra/charts", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() {
+			parts := strings.Split(strings.TrimSuffix(d.Name(), ".properties"), "_")
+			if len(parts) != 4 {
+				return errors.New("chart filename must have exactly 4 parts separated by underscores")
+			}
+			cinfo := &ChartInfo{
+				Repository: parts[1],
+				Chart:      parts[2],
+				Version:    parts[3],
+				Release:    "dc-" + parts[2],
+			}
+			fmt.Printf("Installing Helm Chart: Repository: %s Chart: %s Version: %s Release: %s\n",
+				color.HiGreenString(cinfo.Repository),
+				color.HiGreenString(cinfo.Chart),
+				color.HiGreenString(cinfo.Version),
+				color.HiGreenString(cinfo.Release),
+			)
+
+			// Read list of overrides from file.
+			file, err := ChartFS.Open(path)
+			if err != nil {
+				return err
+			}
+			bytes, err := io.ReadAll(file)
+			if err != nil {
+				return err
+			}
+			overrides := make([]string, 0)
+			lines := strings.Split(string(bytes), "\n")
+			for _, line := range lines {
+				overrides = append(overrides, strings.TrimSpace(line))
+			}
+
+			uninstallHelmRelease(settings, cinfo)
+			_, err = createHelmRelease(settings, cinfo, overrides)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 
 func init() {
