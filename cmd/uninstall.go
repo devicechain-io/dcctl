@@ -11,12 +11,12 @@ import (
 )
 
 // Create common command for creating DeviceChain resources
-var installCmd = &cobra.Command{
-	Use:   "install",
-	Short: "Install system components",
-	Long:  `Installs infrastructure and core components needed to use DeviceChain`,
+var uninstallCmd = &cobra.Command{
+	Use:   "uninstall",
+	Short: "Uninstall system components",
+	Long:  `Uninstalls infrastructure and core components`,
 }
 
 func init() {
-	rootCmd.AddCommand(installCmd)
+	rootCmd.AddCommand(uninstallCmd)
 }

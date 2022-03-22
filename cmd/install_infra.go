@@ -51,22 +51,19 @@ var installInfraCmd = NewInstallInfraCommand()
 func NewInstallInfraCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:          "infra",
-		Short:        "Install DeviceChain infrastructure components",
+		Short:        "Install infrastructure components",
 		Long:         `Installs and configures DeviceChain infrastructure dependencies`,
 		SilenceUsage: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			uninstall, _ := cmd.Flags().GetBool("uninstall")
-			if uninstall {
-				return uninstallInfraComponents()
-			} else {
-				return installInfraComponents()
-			}
+			return installInfraComponents()
 		},
 	}
 }
 
 // Install all infrastructure components
 func installInfraComponents() error {
+	fmt.Println("Preparing to install DeviceChain infrastructure components...")
+
 	// Validate that system namespace exists.
 	err := assureSystemNamespace()
 	if err != nil {
@@ -98,28 +95,23 @@ func installInfraComponents() error {
 		return err
 	}
 
+	fmt.Println(color.HiGreenString("\nInstallation completed successfully."))
 	return nil
-}
-
-// Uninstall infrastructure components.
-func uninstallInfraComponents() error {
-	settings := cli.New()
-	return uninstallHelmReleases(settings)
 }
 
 // Assure that
 func assureSystemNamespace() error {
 	// Check for existing namespace.
-	fmt.Print(color.WhiteString("Verifying DeviceChain system namespace... "))
+	fmt.Print(color.WhiteString("\nVerifying DeviceChain system namespace... "))
 	ns := &corev1.Namespace{}
 	err := corev1beta1.V1Client.Get(context.Background(), types.NamespacedName{Name: NS_DC_SYSTEM}, ns)
 	if err != nil {
 		// Attempt to create the namespace.
 		ns = &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{Name: NS_DC_SYSTEM}}
 		err = corev1beta1.V1Client.Create(context.Background(), ns)
-		fmt.Println(color.HiGreenString("Created system namespace."))
+		fmt.Println(color.GreenString("Created system namespace."))
 	} else {
-		fmt.Println(color.HiGreenString("System namespace verified."))
+		fmt.Println(color.GreenString("System namespace verified."))
 	}
 	return err
 }
@@ -141,14 +133,14 @@ func assureHelmRepositoryConfig(settings *cli.EnvSettings) (*repo.File, error) {
 			return nil, err
 		}
 		fmt.Println(color.WhiteString("Created new Helm repositories configuration at: "),
-			color.HiGreenString(settings.RepositoryConfig))
+			color.GreenString(settings.RepositoryConfig))
 	} else {
 		file, err = repo.LoadFile(settings.RepositoryConfig)
 		if err != nil {
 			return nil, err
 		}
 		fmt.Println(color.WhiteString("Using existing Helm repositories configuration at: "),
-			color.HiGreenString(settings.RepositoryConfig))
+			color.GreenString(settings.RepositoryConfig))
 	}
 	return file, nil
 }
@@ -158,7 +150,7 @@ func addHelmRepositories(entries []*repo.Entry, settings *cli.EnvSettings, rfile
 	for _, entry := range entries {
 		fmt.Printf(color.WhiteString("Checking repository '%s' ... "), entry.Name)
 		if rfile.Has(entry.Name) {
-			fmt.Println(color.HiGreenString("FOUND"))
+			fmt.Println(color.GreenString("FOUND"))
 			return nil
 		}
 
@@ -178,7 +170,7 @@ func addHelmRepositories(entries []*repo.Entry, settings *cli.EnvSettings, rfile
 		if err != nil {
 			return err
 		}
-		fmt.Println(color.HiGreenString("ADDED"))
+		fmt.Println(color.GreenString("ADDED"))
 	}
 	return nil
 }
@@ -304,7 +296,7 @@ func parseChartInfo(d fs.DirEntry) (*ChartInfo, error) {
 
 // Create Helm releases for each chart embedded in the binary.
 func createHelmReleases(settings *cli.EnvSettings) error {
-	fmt.Println(color.HiGreenString("\nInstalling Helm charts..."))
+	fmt.Println(GreenUnderline("\nInstall Helm Charts"))
 	return fs.WalkDir(ChartFS, "install_infra/charts", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -315,10 +307,10 @@ func createHelmReleases(settings *cli.EnvSettings) error {
 				return err
 			}
 			fmt.Printf("Installing Helm Chart: Repository: %s Chart: %s Version: %s Release: %s\n",
-				color.HiGreenString(cinfo.Repository),
-				color.HiGreenString(cinfo.Chart),
-				color.HiGreenString(cinfo.Version),
-				color.HiGreenString(cinfo.Release),
+				color.GreenString(cinfo.Repository),
+				color.GreenString(cinfo.Chart),
+				color.GreenString(cinfo.Version),
+				color.GreenString(cinfo.Release),
 			)
 
 			// Read list of overrides from file.
@@ -346,35 +338,6 @@ func createHelmReleases(settings *cli.EnvSettings) error {
 	})
 }
 
-// Uninstall Helm releases for each chart embedded in the binary.
-func uninstallHelmReleases(settings *cli.EnvSettings) error {
-	fmt.Println(color.HiGreenString("\nUninstalling Helm charts..."))
-	return fs.WalkDir(ChartFS, "install_infra/charts", func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if !d.IsDir() {
-			cinfo, err := parseChartInfo(d)
-			if err != nil {
-				return err
-			}
-			fmt.Printf("Uninstalling Helm Chart: Repository: %s Chart: %s Version: %s Release: %s\n",
-				color.HiGreenString(cinfo.Repository),
-				color.HiGreenString(cinfo.Chart),
-				color.HiGreenString(cinfo.Version),
-				color.HiGreenString(cinfo.Release),
-			)
-
-			_, err = uninstallHelmRelease(settings, cinfo)
-			if err != nil {
-				return err
-			}
-		}
-		return nil
-	})
-}
-
 func init() {
-	rootCmd.AddCommand(installInfraCmd)
-	installInfraCmd.Flags().BoolP("uninstall", "u", false, "Uninstall DeviceChain Infrastructure")
+	installCmd.AddCommand(installInfraCmd)
 }
