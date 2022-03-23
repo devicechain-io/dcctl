@@ -28,16 +28,16 @@ spec:
     Persistence:
       Rdb:
         Configuration:
-          hostname: dc-postgresql.sitewhere-system
+          hostname: dc-postgresql.dc-system
           maxConnections: 5
-          password: syncope
+          password: devicechain
           port: 5432
-          username: syncope
+          username: devicechain
         Type: postgres95
       Tsdb:
         Configuration:
           databaseName: tenant_${tenant.id}
-          hostname: dc-infrastructure-influxdb.sitewhere-system
+          hostname: dc-infrastructure-influxdb.dc-system
           port: 8086
         Type: influxdb
 status: {}

@@ -58,7 +58,7 @@ func NewInstallCoreCommand() *cobra.Command {
 			}
 
 			// Install operator files.
-			err = installManager(dynamicClient, discoveryClient)
+			err = installOperator(dynamicClient, discoveryClient)
 			if err != nil {
 				return err
 			}
@@ -133,8 +133,8 @@ func installRbac(dynamicClient dynamic.Interface, discoveryClient *discovery.Dis
 	return nil
 }
 
-// Install all manager definitions from k8s metadata.
-func installManager(dynamicClient dynamic.Interface, discoveryClient *discovery.DiscoveryClient) error {
+// Install all operator definitions from k8s metadata.
+func installOperator(dynamicClient dynamic.Interface, discoveryClient *discovery.DiscoveryClient) error {
 	fmt.Println(GreenUnderline("\nInstall Operator Components"))
 	mgrfiles := dck8s.ManagerFiles()
 	mgrs, err := getEmbeddedContent(mgrfiles, "manager")
