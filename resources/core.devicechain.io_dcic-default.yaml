@@ -21,10 +21,8 @@ spec:
         Enabled: true
         HttpPort: 9090
       Redis:
-        Hostname: dc-infrastructure-redis-ha-announce
-        MasterGroupName: devicechain
-        NodeCount: 3
-        Port: 26379
+        Hostname: dc-redis-master.dc-system
+        Port: 6379
     Persistence:
       Rdb:
         Configuration:
@@ -37,7 +35,7 @@ spec:
       Tsdb:
         Configuration:
           databaseName: tenant_${tenant.id}
-          hostname: dc-infrastructure-influxdb.dc-system
+          hostname: dc-influxdb.dc-system
           port: 8086
         Type: influxdb
 status: {}

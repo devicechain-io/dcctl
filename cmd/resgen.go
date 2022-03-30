@@ -11,7 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
-	dmgen "github.com/devicechain-io/dc-devicemanagement/generator"
+	dmgen "github.com/devicechain-io/dc-device-management/generator"
 	gen "github.com/devicechain-io/dc-k8s/generators"
 	ms "github.com/devicechain-io/dc-microservice/config"
 	"github.com/fatih/color"

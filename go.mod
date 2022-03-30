@@ -3,7 +3,7 @@ module github.com/devicechain-io/dcctl
 go 1.17
 
 require (
-	github.com/devicechain-io/dc-devicemanagement v0.0.0
+	github.com/devicechain-io/dc-device-management v0.0.0
 	github.com/devicechain-io/dc-k8s v0.0.0
 	github.com/devicechain-io/dc-microservice v0.0.0
 	github.com/fatih/color v1.13.0
@@ -142,4 +142,4 @@ replace github.com/devicechain-io/dc-k8s v0.0.0 => ../dc-k8s
 
 replace github.com/devicechain-io/dc-microservice v0.0.0 => ../dc-microservice
 
-replace github.com/devicechain-io/dc-devicemanagement v0.0.0 => ../dc-devicemanagement
+replace github.com/devicechain-io/dc-device-management v0.0.0 => ../dc-device-management
