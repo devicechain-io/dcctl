@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 
 	dmgen "github.com/devicechain-io/dc-device-management/generator"
+	esgen "github.com/devicechain-io/dc-event-sources/generator"
 	gen "github.com/devicechain-io/dc-k8s/generators"
 	ms "github.com/devicechain-io/dc-microservice/config"
 	umgen "github.com/devicechain-io/dc-user-management/generator"
@@ -39,7 +40,10 @@ var resgenCmd = &cobra.Command{
 
 		// Generate resources for each microservice
 		fmt.Println(GreenUnderline("\nMicroservice Resources"))
-		err = generateMicroserviceResources(dmgen.ResourceProvider{}, umgen.ResourceProvider{})
+		err = generateMicroserviceResources(
+			dmgen.ResourceProvider{},
+			esgen.ResourceProvider{},
+			umgen.ResourceProvider{})
 		if err != nil {
 			return err
 		}

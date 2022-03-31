@@ -1,0 +1,12 @@
+apiVersion: core.devicechain.io/v1beta1
+kind: MicroserviceConfiguration
+metadata:
+  creationTimestamp: null
+  name: event-sources-default
+spec:
+  configuration:
+    Nested:
+      Test: test
+  functionalArea: event-sources
+  image: devicechain-io/event-sources:0.0.1
+status: {}
