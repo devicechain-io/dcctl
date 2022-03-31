@@ -13,7 +13,7 @@ spec:
         Port: 9092
       Keycloak:
         Hostname: dc-keycloak
-        Port: 1234
+        Port: 8080
       Metrics:
         Enabled: true
         HttpPort: 9090
