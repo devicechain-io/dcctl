@@ -12,7 +12,7 @@ spec:
         Hostname: dc-kafka-kafka-bootstrap
         Port: 9092
       Keycloak:
-        Hostname: dc-keycloak
+        Hostname: dc-keycloak.dc-system
         Port: 8080
       Metrics:
         Enabled: true
