@@ -14,6 +14,7 @@ import (
 	dmgen "github.com/devicechain-io/dc-device-management/generator"
 	gen "github.com/devicechain-io/dc-k8s/generators"
 	ms "github.com/devicechain-io/dc-microservice/config"
+	umgen "github.com/devicechain-io/dc-user-management/generator"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -38,7 +39,7 @@ var resgenCmd = &cobra.Command{
 
 		// Generate resources for each microservice
 		fmt.Println(GreenUnderline("\nMicroservice Resources"))
-		err = generateMicroserviceResources(dmgen.ResourceProvider{})
+		err = generateMicroserviceResources(dmgen.ResourceProvider{}, umgen.ResourceProvider{})
 		if err != nil {
 			return err
 		}
@@ -98,8 +99,8 @@ func generateMicroserviceResources(providers ...gen.ConfigurationResourceProvide
 			}
 			fmt.Printf(color.GreenString("Generated microservice resource: %s\n"), color.HiWhiteString(path))
 		}
-		fmt.Println()
 	}
+	fmt.Println()
 	return nil
 }
 

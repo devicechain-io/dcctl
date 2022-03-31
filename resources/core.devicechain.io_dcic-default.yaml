@@ -6,17 +6,14 @@ metadata:
 spec:
   configuration:
     Infrastructure:
-      Grpc:
-        BackoffMultiplier: 1.5
-        InitialBackoffSeconds: 10
-        MaxBackoffSeconds: 600
-        MaxRetryCount: 6
-        ResolveFQDN: false
       Kafka:
         DefaultTopicPartitions: 8
         DefaultTopicReplicationFactor: 3
         Hostname: dc-kafka-kafka-bootstrap
         Port: 9092
+      Keycloak:
+        Hostname: dc-keycloak
+        Port: 1234
       Metrics:
         Enabled: true
         HttpPort: 9090
