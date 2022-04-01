@@ -22,6 +22,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/discovery"
+	"k8s.io/client-go/dynamic"
 
 	"github.com/spf13/cobra"
 	"helm.sh/helm/v3/pkg/action"
@@ -42,6 +44,9 @@ const (
 var (
 	//go:embed install_infra/charts/*
 	ChartFS embed.FS
+
+	//go:embed install_infra/resources/*
+	ResourcesFS embed.FS
 )
 
 // Create instance of install infra command
@@ -64,8 +69,13 @@ func NewInstallInfraCommand() *cobra.Command {
 func installInfraComponents() error {
 	fmt.Println("Preparing to install DeviceChain infrastructure components...")
 
+	dynamicClient, discoveryClient, err := createClients()
+	if err != nil {
+		return err
+	}
+
 	// Validate that system namespace exists.
-	err := assureSystemNamespace()
+	err = assureSystemNamespace()
 	if err != nil {
 		return err
 	}
@@ -83,6 +93,10 @@ func installInfraComponents() error {
 			Name: "bitnami",
 			URL:  "https://charts.bitnami.com/bitnami",
 		},
+		{
+			Name: "strimzi",
+			URL:  "https://strimzi.io/charts",
+		},
 	}
 	err = addHelmRepositories(entries, settings, rfile)
 	if err != nil {
@@ -91,6 +105,12 @@ func installInfraComponents() error {
 
 	// Create Helm releases from embedded charts.
 	err = createHelmReleases(settings)
+	if err != nil {
+		return err
+	}
+
+	// Create k8s resources from embedded yaml files.
+	err = createInfraResources(dynamicClient, discoveryClient)
 	if err != nil {
 		return err
 	}
@@ -151,26 +171,25 @@ func addHelmRepositories(entries []*repo.Entry, settings *cli.EnvSettings, rfile
 		fmt.Printf(color.WhiteString("Checking repository '%s' ... "), entry.Name)
 		if rfile.Has(entry.Name) {
 			fmt.Println(color.GreenString("FOUND"))
-			return nil
-		}
+		} else {
+			// Pull index file to verify..
+			r, err := repo.NewChartRepository(entry, getter.All(settings))
+			if err != nil {
+				return err
+			}
+			_, err = r.DownloadIndexFile()
+			if err != nil {
+				return err
+			}
 
-		// Pull index file to verify..
-		r, err := repo.NewChartRepository(entry, getter.All(settings))
-		if err != nil {
-			return err
+			// Update repositories list.
+			rfile.Update(entry)
+			err = rfile.WriteFile(settings.RepositoryConfig, 0755)
+			if err != nil {
+				return err
+			}
+			fmt.Println(color.GreenString("ADDED"))
 		}
-		_, err = r.DownloadIndexFile()
-		if err != nil {
-			return err
-		}
-
-		// Update repositories list.
-		rfile.Update(entry)
-		err = rfile.WriteFile(settings.RepositoryConfig, 0755)
-		if err != nil {
-			return err
-		}
-		fmt.Println(color.GreenString("ADDED"))
 	}
 	return nil
 }
@@ -330,6 +349,36 @@ func createHelmReleases(settings *cli.EnvSettings) error {
 
 			uninstallHelmRelease(settings, cinfo)
 			_, err = createHelmRelease(settings, cinfo, overrides)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
+// Create k8s resources for each yaml file embedded in the binary.
+func createInfraResources(dynamicClient dynamic.Interface, discoveryClient *discovery.DiscoveryClient) error {
+	fmt.Println(GreenUnderline("\nInstall Infra Resources"))
+	return fs.WalkDir(ResourcesFS, "install_infra/resources", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() {
+			parts := strings.Split(strings.TrimSuffix(d.Name(), ".yaml"), "_")
+			pname := strings.Title(strings.ReplaceAll(strings.ToLower(parts[1]), "-", " "))
+			fmt.Printf("Installing Yaml Resource: %s\n", color.GreenString(pname))
+
+			file, err := ResourcesFS.Open(path)
+			if err != nil {
+				return err
+			}
+			bytes, err := io.ReadAll(file)
+			if err != nil {
+				return err
+			}
+
+			err = applyYaml(dynamicClient, discoveryClient, bytes)
 			if err != nil {
 				return err
 			}

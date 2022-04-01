@@ -17,10 +17,10 @@ import (
 	"strings"
 
 	v1beta1 "github.com/devicechain-io/dc-k8s/api/v1beta1"
+	apply "github.com/devicechain-io/dc-k8s/apply"
 	dck8s "github.com/devicechain-io/dc-k8s/config"
 	gen "github.com/devicechain-io/dc-k8s/generators"
 
-	"github.com/pytimer/k8sutil/apply"
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
