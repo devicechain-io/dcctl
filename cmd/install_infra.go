@@ -94,8 +94,8 @@ func installInfraComponents() error {
 			URL:  "https://charts.bitnami.com/bitnami",
 		},
 		{
-			Name: "strimzi",
-			URL:  "https://strimzi.io/charts",
+			Name: "timescale",
+			URL:  "https://charts.timescale.com",
 		},
 	}
 	err = addHelmRepositories(entries, settings, rfile)
