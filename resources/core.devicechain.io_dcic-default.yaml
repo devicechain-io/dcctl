@@ -7,9 +7,9 @@ spec:
   configuration:
     Infrastructure:
       Kafka:
-        DefaultTopicPartitions: 8
-        DefaultTopicReplicationFactor: 3
-        Hostname: dc-kafka-kafka-bootstrap
+        DefaultTopicPartitions: 4
+        DefaultTopicReplicationFactor: 1
+        Hostname: dc-kafka-kafka-bootstrap.dc-system
         Port: 9092
       Keycloak:
         Hostname: dc-keycloak.dc-system
