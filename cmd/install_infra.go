@@ -97,6 +97,10 @@ func installInfraComponents() error {
 			Name: "timescale",
 			URL:  "https://charts.timescale.com",
 		},
+		{
+			Name: "mosquitto",
+			URL:  "https://k8s-at-home.com/charts/",
+		},
 	}
 	err = addHelmRepositories(entries, settings, rfile)
 	if err != nil {
