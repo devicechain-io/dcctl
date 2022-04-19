@@ -5,8 +5,8 @@ metadata:
   name: device-management-default
 spec:
   configuration:
-    Nested:
-      Test: test
+    RdbConfiguration:
+      SqlDebug: true
   functionalArea: device-management
   image: devicechain-io/device-management:0.0.1
 status: {}
