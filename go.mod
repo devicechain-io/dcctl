@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/devicechain-io/dc-device-management v0.0.0
+	github.com/devicechain-io/dc-event-management v0.0.0
 	github.com/devicechain-io/dc-event-sources v0.0.0
 	github.com/devicechain-io/dc-k8s v0.0.0
 	github.com/devicechain-io/dc-microservice v0.0.0
@@ -54,7 +55,7 @@ require (
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/gofuzz v1.1.0 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
-	github.com/google/uuid v1.2.0 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/gnostic v0.5.5 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gosuri/uitable v0.0.4 // indirect
@@ -101,7 +102,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/testify v1.7.0 // indirect
+	github.com/stretchr/testify v1.7.1 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
@@ -145,6 +146,8 @@ replace github.com/devicechain-io/dc-k8s v0.0.0 => ../dc-k8s
 replace github.com/devicechain-io/dc-microservice v0.0.0 => ../dc-microservice
 
 replace github.com/devicechain-io/dc-device-management v0.0.0 => ../dc-device-management
+
+replace github.com/devicechain-io/dc-event-management v0.0.0 => ../dc-event-management
 
 replace github.com/devicechain-io/dc-event-sources v0.0.0 => ../dc-event-sources
 
