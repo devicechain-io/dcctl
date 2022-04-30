@@ -31,8 +31,10 @@ spec:
         Type: postgres95
       Tsdb:
         Configuration:
-          databaseName: tenant_${tenant.id}
-          hostname: dc-influxdb.dc-system
-          port: 8086
-        Type: influxdb
+          hostname: dc-timescaledb-single.dc-system
+          maxConnections: 5
+          password: devicechain
+          port: 5432
+          username: devicechain
+        Type: timescaledb
 status: {}

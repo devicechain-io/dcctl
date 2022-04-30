@@ -45,6 +45,9 @@ var (
 	//go:embed install_infra/charts/*
 	ChartFS embed.FS
 
+	//go:embed install_infra/preinstall/*
+	PreinstallFS embed.FS
+
 	//go:embed install_infra/resources/*
 	ResourcesFS embed.FS
 )
@@ -103,6 +106,12 @@ func installInfraComponents() error {
 		},
 	}
 	err = addHelmRepositories(entries, settings, rfile)
+	if err != nil {
+		return err
+	}
+
+	// Preinstall k8s resources from embedded yaml files.
+	err = createPreinstallResources(dynamicClient, discoveryClient)
 	if err != nil {
 		return err
 	}
@@ -353,6 +362,36 @@ func createHelmReleases(settings *cli.EnvSettings) error {
 
 			uninstallHelmRelease(settings, cinfo)
 			_, err = createHelmRelease(settings, cinfo, overrides)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
+// Preinstall (before helm charts) k8s resources for each yaml file embedded in the binary.
+func createPreinstallResources(dynamicClient dynamic.Interface, discoveryClient *discovery.DiscoveryClient) error {
+	fmt.Println(GreenUnderline("\nPreinstall Infra Resources"))
+	return fs.WalkDir(PreinstallFS, "install_infra/preinstall", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() {
+			parts := strings.Split(strings.TrimSuffix(d.Name(), ".yaml"), "_")
+			pname := strings.Title(strings.ReplaceAll(strings.ToLower(parts[1]), "-", " "))
+			fmt.Printf("Preinstalling Yaml Resource: %s\n", color.GreenString(pname))
+
+			file, err := PreinstallFS.Open(path)
+			if err != nil {
+				return err
+			}
+			bytes, err := io.ReadAll(file)
+			if err != nil {
+				return err
+			}
+
+			err = applyYaml(dynamicClient, discoveryClient, bytes)
 			if err != nil {
 				return err
 			}
