@@ -35,6 +35,6 @@ spec:
           maxConnections: 5
           password: devicechain
           port: 5432
-          username: devicechain
+          username: postgres
         Type: timescaledb
 status: {}
