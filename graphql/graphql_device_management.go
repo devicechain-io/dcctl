@@ -47,3 +47,26 @@ func AssureDeviceType(ctx context.Context, cli graphql.Client, token string, nam
 		created(cresp.CreateDeviceType.Token)
 	}
 }
+
+// Assure a device (check for existing or create new).
+func AssureDevice(ctx context.Context, cli graphql.Client, token string, deviceTypeToken string, name *string,
+	description *string, metadata *string) {
+	assure("device", token)
+	req := dmmodel.DeviceCreateRequest{
+		Token:           token,
+		DeviceTypeToken: deviceTypeToken,
+		Name:            name,
+		Description:     description,
+		Metadata:        metadata,
+	}
+	gresp, cresp, err := dmgql.AssureDevice(ctx, cli, req)
+	if err != nil {
+		panic(err)
+	}
+	if gresp != nil {
+		found(gresp.DeviceByToken.Token)
+	}
+	if cresp != nil {
+		created(cresp.CreateDevice.Token)
+	}
+}

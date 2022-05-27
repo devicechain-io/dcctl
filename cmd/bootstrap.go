@@ -39,12 +39,12 @@ func s(val string) *string {
 
 // Section header for bootstrap operation.
 func title(dataset string) {
-	fmt.Println(GreenUnderline(fmt.Sprintf("\nBootstrap Data for %s Dataset\n", dataset)))
+	fmt.Println(GreenUnderline(fmt.Sprintf("\nBootstrap Data for %s Dataset", dataset)))
 }
 
 // Section header for bootstrap operation.
 func header(model string, dataset string) {
-	fmt.Println(WhiteUnderline(fmt.Sprintf("Create %s for %s Dataset", model, dataset)))
+	fmt.Println(WhiteUnderline(fmt.Sprintf("\nCreate %s for %s Dataset", model, dataset)))
 }
 
 // Footer for bootstrap operation.

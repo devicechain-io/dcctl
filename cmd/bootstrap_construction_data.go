@@ -37,6 +37,9 @@ func bootstrapConstructionData(ctx context.Context, cmd *cobra.Command) error {
 	header("Device Types", DATASET_CONSTRUCTION)
 	bootstrapDeviceTypes(ctx, gqlcli)
 
+	header("Devices", DATASET_CONSTRUCTION)
+	bootstrapDevices(ctx, gqlcli)
+
 	footer(DATASET_CONSTRUCTION)
 	return nil
 }
@@ -56,6 +59,29 @@ func bootstrapDeviceTypes(ctx context.Context, client graphql.Client) error {
 			"engineModel": "Cat C3.6",
 			"powerNet": "80 HP",
 			"operatingWeight": "17855 lb"
+		}`))
+	return nil
+}
+
+// Bootstrap devices.
+func bootstrapDevices(ctx context.Context, client graphql.Client) error {
+	// Cat D1 SDK7GV3WXZ3FBXZ
+	gql.AssureDevice(ctx, client, "SDK7GV3WXZ3FBXZ", "catd1", s("Cat D1 VIN:SDK7GV3WXZ3FBXZ"),
+		unspace(`This is a Cat D1 with VIN SDK7GV3WXZ3FBXZ`),
+		unspace(`
+		{
+			"vin": "SDK7GV3WXZ3FBXZ",
+			"owner": "CatCorp",
+			"purchaseDate": "2022/01/01"
+		}`))
+	// Cat D1 WDVM4L7YPRM7HU2
+	gql.AssureDevice(ctx, client, "WDVM4L7YPRM7HU2", "catd1", s("Cat D1 VIN:WDVM4L7YPRM7HU2"),
+		unspace(`This is a Cat D1 with VIN WDVM4L7YPRM7HU2`),
+		unspace(`
+		{
+			"vin": "WDVM4L7YPRM7HU2",
+			"owner": "CatCorp",
+			"purchaseDate": "2022/02/01"
 		}`))
 	return nil
 }
