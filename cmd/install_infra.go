@@ -26,6 +26,8 @@ import (
 	"k8s.io/client-go/dynamic"
 
 	"github.com/spf13/cobra"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chart/loader"
@@ -373,13 +375,14 @@ func createHelmReleases(settings *cli.EnvSettings) error {
 // Preinstall (before helm charts) k8s resources for each yaml file embedded in the binary.
 func createPreinstallResources(dynamicClient dynamic.Interface, discoveryClient *discovery.DiscoveryClient) error {
 	fmt.Println(GreenUnderline("\nPreinstall Infra Resources"))
+	caser := cases.Title(language.Und)
 	return fs.WalkDir(PreinstallFS, "install_infra/preinstall", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		if !d.IsDir() {
 			parts := strings.Split(strings.TrimSuffix(d.Name(), ".yaml"), "_")
-			pname := strings.Title(strings.ReplaceAll(strings.ToLower(parts[1]), "-", " "))
+			pname := caser.String(strings.ReplaceAll(strings.ToLower(parts[1]), "-", " "))
 			fmt.Printf("Preinstalling Yaml Resource: %s\n", color.GreenString(pname))
 
 			file, err := PreinstallFS.Open(path)
@@ -403,13 +406,14 @@ func createPreinstallResources(dynamicClient dynamic.Interface, discoveryClient 
 // Create k8s resources for each yaml file embedded in the binary.
 func createInfraResources(dynamicClient dynamic.Interface, discoveryClient *discovery.DiscoveryClient) error {
 	fmt.Println(GreenUnderline("\nInstall Infra Resources"))
+	caser := cases.Title(language.Und)
 	return fs.WalkDir(ResourcesFS, "install_infra/resources", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		if !d.IsDir() {
 			parts := strings.Split(strings.TrimSuffix(d.Name(), ".yaml"), "_")
-			pname := strings.Title(strings.ReplaceAll(strings.ToLower(parts[1]), "-", " "))
+			pname := caser.String(strings.ReplaceAll(strings.ToLower(parts[1]), "-", " "))
 			fmt.Printf("Installing Yaml Resource: %s\n", color.GreenString(pname))
 
 			file, err := ResourcesFS.Open(path)
