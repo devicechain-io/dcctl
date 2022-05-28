@@ -40,6 +40,12 @@ func bootstrapConstructionData(ctx context.Context, cmd *cobra.Command) error {
 	header("Devices", DATASET_CONSTRUCTION)
 	bootstrapDevices(ctx, gqlcli)
 
+	header("Device Relationship Types", DATASET_CONSTRUCTION)
+	bootstrapDeviceRelationshipTypes(ctx, gqlcli)
+
+	header("Device Relationships", DATASET_CONSTRUCTION)
+	bootstrapDeviceRelationships(ctx, gqlcli)
+
 	footer(DATASET_CONSTRUCTION)
 	return nil
 }
@@ -82,6 +88,37 @@ func bootstrapDevices(ctx context.Context, client graphql.Client) error {
 			"vin": "WDVM4L7YPRM7HU2",
 			"owner": "CatCorp",
 			"purchaseDate": "2022/02/01"
+		}`))
+	return nil
+}
+
+// Bootstrap device relationship types.
+func bootstrapDeviceRelationshipTypes(ctx context.Context, client graphql.Client) error {
+	// Tracks location of
+	gql.AssureDeviceRelationshipType(ctx, client, "tracksLocationOf", s("Tracks location of"),
+		unspace(`The source device tracks the location of the target device`),
+		unspace(`
+		{
+			"accuracy": "1 meter"
+		}`))
+	// Tracks temperature of
+	gql.AssureDeviceRelationshipType(ctx, client, "tracksTempOf", s("Tracks temperature of"),
+		unspace(`The source device tracks the temperature of the target device`),
+		unspace(`
+		{
+			"accuracy": "1 degree C"
+		}`))
+	return nil
+}
+
+// Bootstrap device relationships.
+func bootstrapDeviceRelationships(ctx context.Context, client graphql.Client) error {
+	// SDK7GV3WXZ3FBXZ tracksLocationOf WDVM4L7YPRM7HU2
+	gql.AssureDeviceRelationship(ctx, client, "SDK7GV3WXZ3FBXZ-tracksLocationOf-WDVM4L7YPRM7HU2",
+		"SDK7GV3WXZ3FBXZ", "WDVM4L7YPRM7HU2", "tracksLocationOf",
+		unspace(`
+		{
+			"accuracy": "1 meter"
 		}`))
 	return nil
 }

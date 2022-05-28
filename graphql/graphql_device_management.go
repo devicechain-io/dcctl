@@ -70,3 +70,48 @@ func AssureDevice(ctx context.Context, cli graphql.Client, token string, deviceT
 		created(cresp.CreateDevice.Token)
 	}
 }
+
+// Assure a device relationship type (check for existing or create new).
+func AssureDeviceRelationshipType(ctx context.Context, cli graphql.Client, token string, name *string,
+	description *string, metadata *string) {
+	assure("device relationship type", token)
+	req := dmmodel.DeviceRelationshipTypeCreateRequest{
+		Token:       token,
+		Name:        name,
+		Description: description,
+		Metadata:    metadata,
+	}
+	gresp, cresp, err := dmgql.AssureDeviceRelationshipType(ctx, cli, req)
+	if err != nil {
+		panic(err)
+	}
+	if gresp != nil {
+		found(gresp.DeviceRelationshipTypeByToken.Token)
+	}
+	if cresp != nil {
+		created(cresp.CreateDeviceRelationshipType.Token)
+	}
+}
+
+// Assure a device relationship (check for existing or create new).
+func AssureDeviceRelationship(ctx context.Context, cli graphql.Client, token string, source string,
+	target string, relation string, metadata *string) {
+	assure("device relationship type", token)
+	req := dmmodel.DeviceRelationshipCreateRequest{
+		Token:            token,
+		SourceDevice:     source,
+		TargetDevice:     target,
+		RelationshipType: relation,
+		Metadata:         metadata,
+	}
+	gresp, cresp, err := dmgql.AssureDeviceRelationship(ctx, cli, req)
+	if err != nil {
+		panic(err)
+	}
+	if gresp != nil {
+		found(gresp.DeviceRelationshipByToken.Token)
+	}
+	if cresp != nil {
+		created(cresp.CreateDeviceRelationship.Token)
+	}
+}
