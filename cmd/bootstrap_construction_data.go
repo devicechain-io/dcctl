@@ -46,6 +46,15 @@ func bootstrapConstructionData(ctx context.Context, cmd *cobra.Command) error {
 	header("Device Relationships", DATASET_CONSTRUCTION)
 	bootstrapDeviceRelationships(ctx, gqlcli)
 
+	header("Device Groups", DATASET_CONSTRUCTION)
+	bootstrapDeviceGroups(ctx, gqlcli)
+
+	header("Device Group Relationship Types", DATASET_CONSTRUCTION)
+	bootstrapDeviceGroupRelationshipTypes(ctx, gqlcli)
+
+	header("Device Group Relationships", DATASET_CONSTRUCTION)
+	bootstrapDeviceGroupRelationships(ctx, gqlcli)
+
 	footer(DATASET_CONSTRUCTION)
 	return nil
 }
@@ -120,6 +129,41 @@ func bootstrapDeviceRelationships(ctx context.Context, client graphql.Client) er
 		{
 			"accuracy": "1 meter"
 		}`))
+	return nil
+}
+
+// Bootstrap device groups.
+func bootstrapDeviceGroups(ctx context.Context, client graphql.Client) error {
+	// Small Dozers
+	gql.AssureDeviceGroup(ctx, client, "smalldoz", s("Small Dozers"),
+		unspace(`Under 105 hp, the Cat® small dozers are designed to optimize speed, transportability, maneuverability, 
+		versatility and finish grading accuracy. These crawler dozers are ideal for residential construction performing 
+		such tasks as clearing and grading lots, sloping the sides of roads, back-filling, and final grade work for 
+		landscaping and driveway construction.`),
+		s("https://devicechain.s3.amazonaws.com/datasets/construction/catd1.jpg"), nil, nil, nil, nil,
+		unspace(`
+		{
+			"maxWeight": "20000 lb"
+		}`))
+	return nil
+}
+
+// Bootstrap device group relationship types.
+func bootstrapDeviceGroupRelationshipTypes(ctx context.Context, client graphql.Client) error {
+	// Tracks location of
+	gql.AssureDeviceGroupRelationshipType(ctx, client, "contains", s("Contains"),
+		unspace(`The group contains the target device`), nil)
+	return nil
+}
+
+// Bootstrap device group relationships.
+func bootstrapDeviceGroupRelationships(ctx context.Context, client graphql.Client) error {
+	// smalldoz contains SDK7GV3WXZ3FBXZ
+	gql.AssureDeviceGroupRelationship(ctx, client, "smalldoz-contains-SDK7GV3WXZ3FBXZ",
+		"smalldoz", "SDK7GV3WXZ3FBXZ", "contains", nil)
+	// smalldoz contains WDVM4L7YPRM7HU2
+	gql.AssureDeviceGroupRelationship(ctx, client, "smalldoz-contains-WDVM4L7YPRM7HU2",
+		"smalldoz", "WDVM4L7YPRM7HU2", "contains", nil)
 	return nil
 }
 
