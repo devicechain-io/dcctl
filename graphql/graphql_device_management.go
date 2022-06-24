@@ -36,15 +36,14 @@ func AssureDeviceType(ctx context.Context, cli graphql.Client, token string, nam
 		BorderColor:     borderColor,
 		Metadata:        metadata,
 	}
-	gresp, cresp, err := dmgql.AssureDeviceType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureDeviceType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.DeviceTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateDeviceType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -59,15 +58,14 @@ func AssureDevice(ctx context.Context, cli graphql.Client, token string, deviceT
 		Description:     description,
 		Metadata:        metadata,
 	}
-	gresp, cresp, err := dmgql.AssureDevice(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureDevice(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.DevicesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateDevice.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -81,15 +79,14 @@ func AssureDeviceRelationshipType(ctx context.Context, cli graphql.Client, token
 		Description: description,
 		Metadata:    metadata,
 	}
-	gresp, cresp, err := dmgql.AssureDeviceRelationshipType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureDeviceRelationshipType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.DeviceRelationshipTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateDeviceRelationshipType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -104,15 +101,14 @@ func AssureDeviceRelationship(ctx context.Context, cli graphql.Client, token str
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
-	gresp, cresp, err := dmgql.AssureDeviceRelationship(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureDeviceRelationship(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.DeviceRelationshipsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateDeviceRelationship.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -132,15 +128,14 @@ func AssureDeviceGroup(ctx context.Context, cli graphql.Client, token string, na
 		BorderColor:     borderColor,
 		Metadata:        metadata,
 	}
-	gresp, cresp, err := dmgql.AssureDeviceGroup(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureDeviceGroup(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.DeviceGroupsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateDeviceGroup.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -154,15 +149,14 @@ func AssureDeviceGroupRelationshipType(ctx context.Context, cli graphql.Client, 
 		Description: description,
 		Metadata:    metadata,
 	}
-	gresp, cresp, err := dmgql.AssureDeviceGroupRelationshipType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureDeviceGroupRelationshipType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.DeviceGroupRelationshipTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateDeviceGroupRelationshipType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -177,15 +171,14 @@ func AssureDeviceGroupRelationship(ctx context.Context, cli graphql.Client, toke
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
-	gresp, cresp, err := dmgql.AssureDeviceGroupRelationship(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureDeviceGroupRelationship(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.DeviceGroupRelationshipsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateDeviceGroupRelationship.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -205,16 +198,20 @@ func AssureAssetType(ctx context.Context, cli graphql.Client, token string, name
 		BorderColor:     borderColor,
 		Metadata:        metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAssetType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAssetType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AssetTypesByToken[0].Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
-	if cresp != nil {
-		created(cresp.CreateAssetType.Token)
-	}
+}
+
+// Get asset types by token.
+func GetAssetTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAssetType, error) {
+	return dmgql.GetAssetTypesByToken(ctx, cli, tokens)
 }
 
 // Assure an asset (check for existing or create new).
@@ -228,15 +225,14 @@ func AssureAsset(ctx context.Context, cli graphql.Client, token string, assetTyp
 		Description:    description,
 		Metadata:       metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAsset(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAsset(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AssetsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAsset.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -250,15 +246,14 @@ func AssureAssetRelationshipType(ctx context.Context, cli graphql.Client, token 
 		Description: description,
 		Metadata:    metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAssetRelationshipType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAssetRelationshipType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AssetRelationshipTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAssetRelationshipType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -273,15 +268,14 @@ func AssureAssetRelationship(ctx context.Context, cli graphql.Client, token stri
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAssetRelationship(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAssetRelationship(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AssetRelationshipsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAssetRelationship.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -301,16 +295,20 @@ func AssureAssetGroup(ctx context.Context, cli graphql.Client, token string, nam
 		BorderColor:     borderColor,
 		Metadata:        metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAssetGroup(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAssetGroup(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AssetGroupsByToken[0].Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
-	if cresp != nil {
-		created(cresp.CreateAssetGroup.Token)
-	}
+}
+
+// Get asset groups by token.
+func GetAssetGroupsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAssetGroup, error) {
+	return dmgql.GetAssetGroupsByToken(ctx, cli, tokens)
 }
 
 // Assure an asset group relationship type (check for existing or create new).
@@ -323,15 +321,14 @@ func AssureAssetGroupRelationshipType(ctx context.Context, cli graphql.Client, t
 		Description: description,
 		Metadata:    metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAssetGroupRelationshipType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAssetGroupRelationshipType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AssetGroupRelationshipTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAssetGroupRelationshipType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -346,15 +343,14 @@ func AssureAssetGroupRelationship(ctx context.Context, cli graphql.Client, token
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAssetGroupRelationship(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAssetGroupRelationship(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AssetGroupRelationshipsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAssetGroupRelationship.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -374,15 +370,14 @@ func AssureAreaType(ctx context.Context, cli graphql.Client, token string, name 
 		BorderColor:     borderColor,
 		Metadata:        metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAreaType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAreaType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AreaTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAreaType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -397,15 +392,14 @@ func AssureArea(ctx context.Context, cli graphql.Client, token string, areaTypeT
 		Description:   description,
 		Metadata:      metadata,
 	}
-	gresp, cresp, err := dmgql.AssureArea(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureArea(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AreasByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateArea.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -419,15 +413,14 @@ func AssureAreaRelationshipType(ctx context.Context, cli graphql.Client, token s
 		Description: description,
 		Metadata:    metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAreaRelationshipType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAreaRelationshipType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AreaRelationshipTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAreaRelationshipType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -442,15 +435,14 @@ func AssureAreaRelationship(ctx context.Context, cli graphql.Client, token strin
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAreaRelationship(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAreaRelationship(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AreaRelationshipsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAreaRelationship.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -470,15 +462,14 @@ func AssureAreaGroup(ctx context.Context, cli graphql.Client, token string, name
 		BorderColor:     borderColor,
 		Metadata:        metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAreaGroup(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAreaGroup(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AreaGroupsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAreaGroup.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -492,15 +483,14 @@ func AssureAreaGroupRelationshipType(ctx context.Context, cli graphql.Client, to
 		Description: description,
 		Metadata:    metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAreaGroupRelationshipType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAreaGroupRelationshipType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AreaGroupRelationshipTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAreaGroupRelationshipType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -515,15 +505,14 @@ func AssureAreaGroupRelationship(ctx context.Context, cli graphql.Client, token 
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
-	gresp, cresp, err := dmgql.AssureAreaGroupRelationship(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureAreaGroupRelationship(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.AreaGroupRelationshipsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateAreaGroupRelationship.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -543,15 +532,14 @@ func AssureCustomerType(ctx context.Context, cli graphql.Client, token string, n
 		BorderColor:     borderColor,
 		Metadata:        metadata,
 	}
-	gresp, cresp, err := dmgql.AssureCustomerType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureCustomerType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.CustomerTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateCustomerType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -566,15 +554,14 @@ func AssureCustomer(ctx context.Context, cli graphql.Client, token string, custo
 		Description:       description,
 		Metadata:          metadata,
 	}
-	gresp, cresp, err := dmgql.AssureCustomer(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureCustomer(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.CustomersByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateCustomer.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -588,15 +575,14 @@ func AssureCustomerRelationshipType(ctx context.Context, cli graphql.Client, tok
 		Description: description,
 		Metadata:    metadata,
 	}
-	gresp, cresp, err := dmgql.AssureCustomerRelationshipType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureCustomerRelationshipType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.CustomerRelationshipTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateCustomerRelationshipType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -611,15 +597,14 @@ func AssureCustomerRelationship(ctx context.Context, cli graphql.Client, token s
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
-	gresp, cresp, err := dmgql.AssureCustomerRelationship(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureCustomerRelationship(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.CustomerRelationshipsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateCustomerRelationship.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -639,15 +624,14 @@ func AssureCustomerGroup(ctx context.Context, cli graphql.Client, token string, 
 		BorderColor:     borderColor,
 		Metadata:        metadata,
 	}
-	gresp, cresp, err := dmgql.AssureCustomerGroup(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureCustomerGroup(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.CustomerGroupsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateCustomerGroup.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -661,15 +645,14 @@ func AssureCustomerGroupRelationshipType(ctx context.Context, cli graphql.Client
 		Description: description,
 		Metadata:    metadata,
 	}
-	gresp, cresp, err := dmgql.AssureCustomerGroupRelationshipType(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureCustomerGroupRelationshipType(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.CustomerGroupRelationshipTypesByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateCustomerGroupRelationshipType.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
 
@@ -684,14 +667,13 @@ func AssureCustomerGroupRelationship(ctx context.Context, cli graphql.Client, to
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
-	gresp, cresp, err := dmgql.AssureCustomerGroupRelationship(ctx, cli, req)
+	resp, wascreated, err := dmgql.AssureCustomerGroupRelationship(ctx, cli, req)
 	if err != nil {
 		panic(err)
 	}
-	if gresp != nil {
-		found(gresp.CustomerGroupRelationshipsByToken[0].Token)
-	}
-	if cresp != nil {
-		created(cresp.CreateCustomerGroupRelationship.Token)
+	if wascreated {
+		created(resp.GetToken())
+	} else {
+		found(resp.GetToken())
 	}
 }
