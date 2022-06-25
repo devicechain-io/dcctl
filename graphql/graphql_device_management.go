@@ -47,6 +47,11 @@ func AssureDeviceType(ctx context.Context, cli graphql.Client, token string, nam
 	}
 }
 
+// Get device types by token.
+func GetDeviceTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IDeviceType, error) {
+	return dmgql.GetDeviceTypesByToken(ctx, cli, tokens)
+}
+
 // Assure a device (check for existing or create new).
 func AssureDevice(ctx context.Context, cli graphql.Client, token string, deviceTypeToken string, name *string,
 	description *string, metadata *string) {
@@ -67,6 +72,11 @@ func AssureDevice(ctx context.Context, cli graphql.Client, token string, deviceT
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get devices by token.
+func GetDevicesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IDevice, error) {
+	return dmgql.GetDevicesByToken(ctx, cli, tokens)
 }
 
 // Assure a device relationship type (check for existing or create new).
@@ -90,6 +100,11 @@ func AssureDeviceRelationshipType(ctx context.Context, cli graphql.Client, token
 	}
 }
 
+// Get device relationship types by token.
+func GetDeviceRelationshipTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IDeviceRelationshipType, error) {
+	return dmgql.GetDeviceRelationshipTypesByToken(ctx, cli, tokens)
+}
+
 // Assure a device relationship (check for existing or create new).
 func AssureDeviceRelationship(ctx context.Context, cli graphql.Client, token string, source string,
 	target string, relation string, metadata *string) {
@@ -110,6 +125,11 @@ func AssureDeviceRelationship(ctx context.Context, cli graphql.Client, token str
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get device relationships by token.
+func GetDeviceRelationshipsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IDeviceRelationship, error) {
+	return dmgql.GetDeviceRelationshipsByToken(ctx, cli, tokens)
 }
 
 // Assure a device group (check for existing or create new).
@@ -139,6 +159,11 @@ func AssureDeviceGroup(ctx context.Context, cli graphql.Client, token string, na
 	}
 }
 
+// Get device groups by token.
+func GetDeviceGroupsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IDeviceGroup, error) {
+	return dmgql.GetDeviceGroupsByToken(ctx, cli, tokens)
+}
+
 // Assure a device group relationship type (check for existing or create new).
 func AssureDeviceGroupRelationshipType(ctx context.Context, cli graphql.Client, token string, name *string,
 	description *string, metadata *string) {
@@ -158,6 +183,11 @@ func AssureDeviceGroupRelationshipType(ctx context.Context, cli graphql.Client, 
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get device group relationship types by token.
+func GetDeviceGroupRelationshipTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IDeviceGroupRelationshipType, error) {
+	return dmgql.GetDeviceGroupRelationshipTypesByToken(ctx, cli, tokens)
 }
 
 // Assure a device group relationship (check for existing or create new).
@@ -180,6 +210,11 @@ func AssureDeviceGroupRelationship(ctx context.Context, cli graphql.Client, toke
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get device group relationships by token.
+func GetDeviceGroupRelationshipsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IDeviceGroupRelationship, error) {
+	return dmgql.GetDeviceGroupRelationshipsByToken(ctx, cli, tokens)
 }
 
 // Assure an asset type (check for existing or create new).
@@ -236,6 +271,11 @@ func AssureAsset(ctx context.Context, cli graphql.Client, token string, assetTyp
 	}
 }
 
+// Get assets by token.
+func GetAssetsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAsset, error) {
+	return dmgql.GetAssetsByToken(ctx, cli, tokens)
+}
+
 // Assure an asset relationship type (check for existing or create new).
 func AssureAssetRelationshipType(ctx context.Context, cli graphql.Client, token string, name *string,
 	description *string, metadata *string) {
@@ -255,6 +295,11 @@ func AssureAssetRelationshipType(ctx context.Context, cli graphql.Client, token 
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get asset relationship types by token.
+func GetAssetRelationshipTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAssetRelationshipType, error) {
+	return dmgql.GetAssetRelationshipTypesByToken(ctx, cli, tokens)
 }
 
 // Assure an asset relationship (check for existing or create new).
@@ -277,6 +322,11 @@ func AssureAssetRelationship(ctx context.Context, cli graphql.Client, token stri
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get asset relationships by token.
+func GetAssetRelationshipsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAssetRelationship, error) {
+	return dmgql.GetAssetRelationshipsByToken(ctx, cli, tokens)
 }
 
 // Assure an asset group (check for existing or create new).
@@ -332,6 +382,11 @@ func AssureAssetGroupRelationshipType(ctx context.Context, cli graphql.Client, t
 	}
 }
 
+// Get asset group relationship types by token.
+func GetAssetGroupRelationshipTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAssetGroupRelationshipType, error) {
+	return dmgql.GetAssetGroupRelationshipTypesByToken(ctx, cli, tokens)
+}
+
 // Assure an asset group relationship (check for existing or create new).
 func AssureAssetGroupRelationship(ctx context.Context, cli graphql.Client, token string, assetGroup string,
 	asset string, relation string, metadata *string) {
@@ -352,6 +407,11 @@ func AssureAssetGroupRelationship(ctx context.Context, cli graphql.Client, token
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get asset group relationships by token.
+func GetAssetGroupRelationshipsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAssetGroupRelationship, error) {
+	return dmgql.GetAssetGroupRelationshipsByToken(ctx, cli, tokens)
 }
 
 // Assure an area type (check for existing or create new).
@@ -381,6 +441,11 @@ func AssureAreaType(ctx context.Context, cli graphql.Client, token string, name 
 	}
 }
 
+// Get area types by token.
+func GetAreaTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAreaType, error) {
+	return dmgql.GetAreaTypesByToken(ctx, cli, tokens)
+}
+
 // Assure an area (check for existing or create new).
 func AssureArea(ctx context.Context, cli graphql.Client, token string, areaTypeToken string, name *string,
 	description *string, metadata *string) {
@@ -401,6 +466,11 @@ func AssureArea(ctx context.Context, cli graphql.Client, token string, areaTypeT
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get areas by token.
+func GetAreasByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IArea, error) {
+	return dmgql.GetAreasByToken(ctx, cli, tokens)
 }
 
 // Assure an area relationship type (check for existing or create new).
@@ -424,6 +494,11 @@ func AssureAreaRelationshipType(ctx context.Context, cli graphql.Client, token s
 	}
 }
 
+// Get area relationship types by token.
+func GetAreaRelationshipTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAreaRelationshipType, error) {
+	return dmgql.GetAreaRelationshipTypesByToken(ctx, cli, tokens)
+}
+
 // Assure an area relationship (check for existing or create new).
 func AssureAreaRelationship(ctx context.Context, cli graphql.Client, token string, source string,
 	target string, relation string, metadata *string) {
@@ -444,6 +519,11 @@ func AssureAreaRelationship(ctx context.Context, cli graphql.Client, token strin
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get area relationships by token.
+func GetAreaRelationshipsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAreaRelationship, error) {
+	return dmgql.GetAreaRelationshipsByToken(ctx, cli, tokens)
 }
 
 // Assure an area group (check for existing or create new).
@@ -473,6 +553,11 @@ func AssureAreaGroup(ctx context.Context, cli graphql.Client, token string, name
 	}
 }
 
+// Get area groups by token.
+func GetAreaGroupsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAreaGroup, error) {
+	return dmgql.GetAreaGroupsByToken(ctx, cli, tokens)
+}
+
 // Assure an area group relationship type (check for existing or create new).
 func AssureAreaGroupRelationshipType(ctx context.Context, cli graphql.Client, token string, name *string,
 	description *string, metadata *string) {
@@ -492,6 +577,11 @@ func AssureAreaGroupRelationshipType(ctx context.Context, cli graphql.Client, to
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get area group relationship types by token.
+func GetAreaGroupRelationshipTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAreaGroupRelationshipType, error) {
+	return dmgql.GetAreaGroupRelationshipTypesByToken(ctx, cli, tokens)
 }
 
 // Assure an area group relationship (check for existing or create new).
@@ -514,6 +604,11 @@ func AssureAreaGroupRelationship(ctx context.Context, cli graphql.Client, token 
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get area group relationships by token.
+func GetAreaGroupRelationshipsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.IAreaGroupRelationship, error) {
+	return dmgql.GetAreaGroupRelationshipsByToken(ctx, cli, tokens)
 }
 
 // Assure a customer type (check for existing or create new).
@@ -543,6 +638,11 @@ func AssureCustomerType(ctx context.Context, cli graphql.Client, token string, n
 	}
 }
 
+// Get customer types by token.
+func GetCustomerTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.ICustomerType, error) {
+	return dmgql.GetCustomerTypesByToken(ctx, cli, tokens)
+}
+
 // Assure a customer (check for existing or create new).
 func AssureCustomer(ctx context.Context, cli graphql.Client, token string, customerTypeToken string, name *string,
 	description *string, metadata *string) {
@@ -563,6 +663,11 @@ func AssureCustomer(ctx context.Context, cli graphql.Client, token string, custo
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get customers by token.
+func GetCustomersByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.ICustomer, error) {
+	return dmgql.GetCustomersByToken(ctx, cli, tokens)
 }
 
 // Assure a customer relationship type (check for existing or create new).
@@ -586,6 +691,11 @@ func AssureCustomerRelationshipType(ctx context.Context, cli graphql.Client, tok
 	}
 }
 
+// Get customer relationship types by token.
+func GetCustomerRelationshipTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.ICustomerRelationshipType, error) {
+	return dmgql.GetCustomerRelationshipTypesByToken(ctx, cli, tokens)
+}
+
 // Assure a customer relationship (check for existing or create new).
 func AssureCustomerRelationship(ctx context.Context, cli graphql.Client, token string, source string,
 	target string, relation string, metadata *string) {
@@ -606,6 +716,11 @@ func AssureCustomerRelationship(ctx context.Context, cli graphql.Client, token s
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get customer relationships by token.
+func GetCustomerRelationshipsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.ICustomerRelationship, error) {
+	return dmgql.GetCustomerRelationshipsByToken(ctx, cli, tokens)
 }
 
 // Assure a customer group (check for existing or create new).
@@ -635,6 +750,11 @@ func AssureCustomerGroup(ctx context.Context, cli graphql.Client, token string, 
 	}
 }
 
+// Get customer groups by token.
+func GetCustomerGroupsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.ICustomerGroup, error) {
+	return dmgql.GetCustomerGroupsByToken(ctx, cli, tokens)
+}
+
 // Assure a customer group relationship type (check for existing or create new).
 func AssureCustomerGroupRelationshipType(ctx context.Context, cli graphql.Client, token string, name *string,
 	description *string, metadata *string) {
@@ -654,6 +774,11 @@ func AssureCustomerGroupRelationshipType(ctx context.Context, cli graphql.Client
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get customer group relationship types by token.
+func GetCustomerGroupRelationshipTypesByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.ICustomerGroupRelationshipType, error) {
+	return dmgql.GetCustomerGroupRelationshipTypesByToken(ctx, cli, tokens)
 }
 
 // Assure a customer group relationship (check for existing or create new).
@@ -676,4 +801,9 @@ func AssureCustomerGroupRelationship(ctx context.Context, cli graphql.Client, to
 	} else {
 		found(resp.GetToken())
 	}
+}
+
+// Get customer group relationships by token.
+func GetCustomerGroupRelationshipsByToken(ctx context.Context, cli graphql.Client, tokens []string) (map[string]dmgql.ICustomerGroupRelationship, error) {
+	return dmgql.GetCustomerGroupRelationshipsByToken(ctx, cli, tokens)
 }
