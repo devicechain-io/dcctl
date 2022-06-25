@@ -60,6 +60,12 @@ func (dmc *DeviceManagementClient) GetDeviceTypesByToken(ctx context.Context, to
 	return dmgql.GetDeviceTypesByToken(ctx, dmc.Client, tokens)
 }
 
+// List device types that meet criteria.
+func (dmc *DeviceManagementClient) ListDeviceTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IDeviceType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListDeviceTypes(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure a device (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureDevice(ctx context.Context, token string, deviceTypeToken string, name *string,
 	description *string, metadata *string) {
@@ -85,6 +91,12 @@ func (dmc *DeviceManagementClient) AssureDevice(ctx context.Context, token strin
 // Get devices by token.
 func (dmc *DeviceManagementClient) GetDevicesByToken(ctx context.Context, tokens []string) (map[string]dmgql.IDevice, error) {
 	return dmgql.GetDevicesByToken(ctx, dmc.Client, tokens)
+}
+
+// List devices that meet criteria.
+func (dmc *DeviceManagementClient) ListDevices(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IDevice, *dmgql.DefaultPagination, error) {
+	return dmgql.ListDevices(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure a device relationship type (check for existing or create new).
@@ -114,6 +126,12 @@ func (dmc *DeviceManagementClient) GetDeviceRelationshipTypesByToken(ctx context
 	return dmgql.GetDeviceRelationshipTypesByToken(ctx, dmc.Client, tokens)
 }
 
+// List device relationship types that meet criteria.
+func (dmc *DeviceManagementClient) ListDeviceRelationshipTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IDeviceRelationshipType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListDeviceRelationshipTypes(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure a device relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureDeviceRelationship(ctx context.Context, token string, source string,
 	target string, relation string, metadata *string) {
@@ -140,6 +158,12 @@ func (dmc *DeviceManagementClient) AssureDeviceRelationship(ctx context.Context,
 func (dmc *DeviceManagementClient) GetDeviceRelationshipsByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IDeviceRelationship, error) {
 	return dmgql.GetDeviceRelationshipsByToken(ctx, dmc.Client, tokens)
+}
+
+// List device relationships that meet criteria.
+func (dmc *DeviceManagementClient) ListDeviceRelationships(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IDeviceRelationship, *dmgql.DefaultPagination, error) {
+	return dmgql.ListDeviceRelationships(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure a device group (check for existing or create new).
@@ -175,6 +199,12 @@ func (dmc *DeviceManagementClient) GetDeviceGroupsByToken(ctx context.Context,
 	return dmgql.GetDeviceGroupsByToken(ctx, dmc.Client, tokens)
 }
 
+// List device groups that meet criteria.
+func (dmc *DeviceManagementClient) ListDeviceGroups(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IDeviceGroup, *dmgql.DefaultPagination, error) {
+	return dmgql.ListDeviceGroups(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure a device group relationship type (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureDeviceGroupRelationshipType(ctx context.Context,
 	token string, name *string, description *string, metadata *string) {
@@ -200,6 +230,12 @@ func (dmc *DeviceManagementClient) AssureDeviceGroupRelationshipType(ctx context
 func (dmc *DeviceManagementClient) GetDeviceGroupRelationshipTypesByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IDeviceGroupRelationshipType, error) {
 	return dmgql.GetDeviceGroupRelationshipTypesByToken(ctx, dmc.Client, tokens)
+}
+
+// List device group relationship types that meet criteria.
+func (dmc *DeviceManagementClient) ListDeviceGroupRelationshipTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IDeviceGroupRelationshipType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListDeviceGroupRelationshipTypes(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure a device group relationship (check for existing or create new).
@@ -228,6 +264,12 @@ func (dmc *DeviceManagementClient) AssureDeviceGroupRelationship(ctx context.Con
 func (dmc *DeviceManagementClient) GetDeviceGroupRelationshipsByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IDeviceGroupRelationship, error) {
 	return dmgql.GetDeviceGroupRelationshipsByToken(ctx, dmc.Client, tokens)
+}
+
+// List device group relationships that meet criteria.
+func (dmc *DeviceManagementClient) ListDeviceGroupRelationships(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IDeviceGroupRelationship, *dmgql.DefaultPagination, error) {
+	return dmgql.ListDeviceGroupRelationships(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure an asset type (check for existing or create new).
@@ -263,6 +305,12 @@ func (dmc *DeviceManagementClient) GetAssetTypesByToken(ctx context.Context,
 	return dmgql.GetAssetTypesByToken(ctx, dmc.Client, tokens)
 }
 
+// List asset types that meet criteria.
+func (dmc *DeviceManagementClient) ListAssetTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAssetType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAssetTypes(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure an asset (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureAsset(ctx context.Context, token string, assetTypeToken string, name *string,
 	description *string, metadata *string) {
@@ -289,6 +337,12 @@ func (dmc *DeviceManagementClient) AssureAsset(ctx context.Context, token string
 func (dmc *DeviceManagementClient) GetAssetsByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IAsset, error) {
 	return dmgql.GetAssetsByToken(ctx, dmc.Client, tokens)
+}
+
+// List assets that meet criteria.
+func (dmc *DeviceManagementClient) ListAssets(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAsset, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAssets(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure an asset relationship type (check for existing or create new).
@@ -318,6 +372,12 @@ func (dmc *DeviceManagementClient) GetAssetRelationshipTypesByToken(ctx context.
 	return dmgql.GetAssetRelationshipTypesByToken(ctx, dmc.Client, tokens)
 }
 
+// List asset relationship types that meet criteria.
+func (dmc *DeviceManagementClient) ListAssetRelationshipTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAssetRelationshipType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAssetRelationshipTypes(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure an asset relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureAssetRelationship(ctx context.Context, token string, source string,
 	target string, relation string, metadata *string) {
@@ -344,6 +404,12 @@ func (dmc *DeviceManagementClient) AssureAssetRelationship(ctx context.Context, 
 func (dmc *DeviceManagementClient) GetAssetRelationshipsByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IAssetRelationship, error) {
 	return dmgql.GetAssetRelationshipsByToken(ctx, dmc.Client, tokens)
+}
+
+// List asset relationships that meet criteria.
+func (dmc *DeviceManagementClient) ListAssetRelationships(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAssetRelationship, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAssetRelationships(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure an asset group (check for existing or create new).
@@ -378,6 +444,12 @@ func (dmc *DeviceManagementClient) GetAssetGroupsByToken(ctx context.Context, to
 	return dmgql.GetAssetGroupsByToken(ctx, dmc.Client, tokens)
 }
 
+// List asset groups that meet criteria.
+func (dmc *DeviceManagementClient) ListAssetGroups(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAssetGroup, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAssetGroups(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure an asset group relationship type (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureAssetGroupRelationshipType(ctx context.Context, token string, name *string,
 	description *string, metadata *string) {
@@ -403,6 +475,12 @@ func (dmc *DeviceManagementClient) AssureAssetGroupRelationshipType(ctx context.
 func (dmc *DeviceManagementClient) GetAssetGroupRelationshipTypesByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IAssetGroupRelationshipType, error) {
 	return dmgql.GetAssetGroupRelationshipTypesByToken(ctx, dmc.Client, tokens)
+}
+
+// List asset group relationship types that meet criteria.
+func (dmc *DeviceManagementClient) ListAssetGroupRelationshipTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAssetGroupRelationshipType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAssetGroupRelationshipTypes(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure an asset group relationship (check for existing or create new).
@@ -431,6 +509,12 @@ func (dmc *DeviceManagementClient) AssureAssetGroupRelationship(ctx context.Cont
 func (dmc *DeviceManagementClient) GetAssetGroupRelationshipsByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IAssetGroupRelationship, error) {
 	return dmgql.GetAssetGroupRelationshipsByToken(ctx, dmc.Client, tokens)
+}
+
+// List asset group relationships that meet criteria.
+func (dmc *DeviceManagementClient) ListAssetGroupRelationships(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAssetGroupRelationship, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAssetGroupRelationships(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure an area type (check for existing or create new).
@@ -465,6 +549,12 @@ func (dmc *DeviceManagementClient) GetAreaTypesByToken(ctx context.Context, toke
 	return dmgql.GetAreaTypesByToken(ctx, dmc.Client, tokens)
 }
 
+// List area types that meet criteria.
+func (dmc *DeviceManagementClient) ListAreaTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAreaType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAreaTypes(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure an area (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureArea(ctx context.Context, token string, areaTypeToken string, name *string,
 	description *string, metadata *string) {
@@ -490,6 +580,12 @@ func (dmc *DeviceManagementClient) AssureArea(ctx context.Context, token string,
 // Get areas by token.
 func (dmc *DeviceManagementClient) GetAreasByToken(ctx context.Context, tokens []string) (map[string]dmgql.IArea, error) {
 	return dmgql.GetAreasByToken(ctx, dmc.Client, tokens)
+}
+
+// List areas that meet criteria.
+func (dmc *DeviceManagementClient) ListAreas(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IArea, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAreas(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure an area relationship type (check for existing or create new).
@@ -519,6 +615,12 @@ func (dmc *DeviceManagementClient) GetAreaRelationshipTypesByToken(ctx context.C
 	return dmgql.GetAreaRelationshipTypesByToken(ctx, dmc.Client, tokens)
 }
 
+// List area relationship types that meet criteria.
+func (dmc *DeviceManagementClient) ListAreaRelationshipTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAreaRelationshipType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAreaRelationshipTypes(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure an area relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureAreaRelationship(ctx context.Context, token string, source string,
 	target string, relation string, metadata *string) {
@@ -545,6 +647,12 @@ func (dmc *DeviceManagementClient) AssureAreaRelationship(ctx context.Context, t
 func (dmc *DeviceManagementClient) GetAreaRelationshipsByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IAreaRelationship, error) {
 	return dmgql.GetAreaRelationshipsByToken(ctx, dmc.Client, tokens)
+}
+
+// List area relationships that meet criteria.
+func (dmc *DeviceManagementClient) ListAreaRelationships(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAreaRelationship, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAreaRelationships(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure an area group (check for existing or create new).
@@ -580,6 +688,12 @@ func (dmc *DeviceManagementClient) GetAreaGroupsByToken(ctx context.Context,
 	return dmgql.GetAreaGroupsByToken(ctx, dmc.Client, tokens)
 }
 
+// List area groups that meet criteria.
+func (dmc *DeviceManagementClient) ListAreaGroups(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAreaGroup, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAreaGroups(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure an area group relationship type (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureAreaGroupRelationshipType(ctx context.Context, token string, name *string,
 	description *string, metadata *string) {
@@ -605,6 +719,12 @@ func (dmc *DeviceManagementClient) AssureAreaGroupRelationshipType(ctx context.C
 func (dmc *DeviceManagementClient) GetAreaGroupRelationshipTypesByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IAreaGroupRelationshipType, error) {
 	return dmgql.GetAreaGroupRelationshipTypesByToken(ctx, dmc.Client, tokens)
+}
+
+// List area group relationship types that meet criteria.
+func (dmc *DeviceManagementClient) ListAreaGroupRelationshipTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAreaGroupRelationshipType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAreaGroupRelationshipTypes(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure an area group relationship (check for existing or create new).
@@ -633,6 +753,12 @@ func (dmc *DeviceManagementClient) AssureAreaGroupRelationship(ctx context.Conte
 func (dmc *DeviceManagementClient) GetAreaGroupRelationshipsByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.IAreaGroupRelationship, error) {
 	return dmgql.GetAreaGroupRelationshipsByToken(ctx, dmc.Client, tokens)
+}
+
+// List area group relationships that meet criteria.
+func (dmc *DeviceManagementClient) ListAreaGroupRelationships(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.IAreaGroupRelationship, *dmgql.DefaultPagination, error) {
+	return dmgql.ListAreaGroupRelationships(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure a customer type (check for existing or create new).
@@ -668,6 +794,12 @@ func (dmc *DeviceManagementClient) GetCustomerTypesByToken(ctx context.Context,
 	return dmgql.GetCustomerTypesByToken(ctx, dmc.Client, tokens)
 }
 
+// List customer types that meet criteria.
+func (dmc *DeviceManagementClient) ListCustomerTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.ICustomerType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListCustomerTypes(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure a customer (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureCustomer(ctx context.Context, token string, customerTypeToken string,
 	name *string, description *string, metadata *string) {
@@ -694,6 +826,12 @@ func (dmc *DeviceManagementClient) AssureCustomer(ctx context.Context, token str
 func (dmc *DeviceManagementClient) GetCustomersByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.ICustomer, error) {
 	return dmgql.GetCustomersByToken(ctx, dmc.Client, tokens)
+}
+
+// List customers that meet criteria.
+func (dmc *DeviceManagementClient) ListCustomers(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.ICustomer, *dmgql.DefaultPagination, error) {
+	return dmgql.ListCustomers(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure a customer relationship type (check for existing or create new).
@@ -723,6 +861,12 @@ func (dmc *DeviceManagementClient) GetCustomerRelationshipTypesByToken(ctx conte
 	return dmgql.GetCustomerRelationshipTypesByToken(ctx, dmc.Client, tokens)
 }
 
+// List customer relationship types that meet criteria.
+func (dmc *DeviceManagementClient) ListCustomerRelationshipTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.ICustomerRelationshipType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListCustomerRelationshipTypes(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure a customer relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureCustomerRelationship(ctx context.Context, token string, source string,
 	target string, relation string, metadata *string) {
@@ -749,6 +893,12 @@ func (dmc *DeviceManagementClient) AssureCustomerRelationship(ctx context.Contex
 func (dmc *DeviceManagementClient) GetCustomerRelationshipsByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.ICustomerRelationship, error) {
 	return dmgql.GetCustomerRelationshipsByToken(ctx, dmc.Client, tokens)
+}
+
+// List customer relationships that meet criteria.
+func (dmc *DeviceManagementClient) ListCustomerRelationships(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.ICustomerRelationship, *dmgql.DefaultPagination, error) {
+	return dmgql.ListCustomerRelationships(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure a customer group (check for existing or create new).
@@ -784,6 +934,12 @@ func (dmc *DeviceManagementClient) GetCustomerGroupsByToken(ctx context.Context,
 	return dmgql.GetCustomerGroupsByToken(ctx, dmc.Client, tokens)
 }
 
+// List customer groups that meet criteria.
+func (dmc *DeviceManagementClient) ListCustomerGroups(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.ICustomerGroup, *dmgql.DefaultPagination, error) {
+	return dmgql.ListCustomerGroups(ctx, dmc.Client, pageNumber, pageSize)
+}
+
 // Assure a customer group relationship type (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureCustomerGroupRelationshipType(ctx context.Context, token string,
 	name *string, description *string, metadata *string) {
@@ -809,6 +965,12 @@ func (dmc *DeviceManagementClient) AssureCustomerGroupRelationshipType(ctx conte
 func (dmc *DeviceManagementClient) GetCustomerGroupRelationshipTypesByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.ICustomerGroupRelationshipType, error) {
 	return dmgql.GetCustomerGroupRelationshipTypesByToken(ctx, dmc.Client, tokens)
+}
+
+// List customer group relationship types that meet criteria.
+func (dmc *DeviceManagementClient) ListCustomerGroupRelationshipTypes(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.ICustomerGroupRelationshipType, *dmgql.DefaultPagination, error) {
+	return dmgql.ListCustomerGroupRelationshipTypes(ctx, dmc.Client, pageNumber, pageSize)
 }
 
 // Assure a customer group relationship (check for existing or create new).
@@ -837,4 +999,10 @@ func (dmc *DeviceManagementClient) AssureCustomerGroupRelationship(ctx context.C
 func (dmc *DeviceManagementClient) GetCustomerGroupRelationshipsByToken(ctx context.Context,
 	tokens []string) (map[string]dmgql.ICustomerGroupRelationship, error) {
 	return dmgql.GetCustomerGroupRelationshipsByToken(ctx, dmc.Client, tokens)
+}
+
+// List customer group relationships that meet criteria.
+func (dmc *DeviceManagementClient) ListCustomerGroupRelationships(ctx context.Context,
+	pageNumber int, pageSize int) ([]dmgql.ICustomerGroupRelationship, *dmgql.DefaultPagination, error) {
+	return dmgql.ListCustomerGroupRelationships(ctx, dmc.Client, pageNumber, pageSize)
 }

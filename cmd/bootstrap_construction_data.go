@@ -34,6 +34,10 @@ var constructionDataCmd = &cobra.Command{
 	SilenceUsage: true,
 }
 
+func init() {
+	bootstrapCmd.AddCommand(constructionDataCmd)
+}
+
 // Bootstraps system microservices with construction sample dataset.
 func bootstrapConstructionData(ctx context.Context, cmd *cobra.Command) error {
 	title(DATASET_CONSTRUCTION)
@@ -253,10 +257,6 @@ func bootstrapAssets(ctx context.Context, dm gql.DeviceManagementClient) {
 	bootstrapAssetsOfType(ctx, dm, "cat305cr", "excavator", 3)
 	bootstrapAssetsOfType(ctx, dm, "cat415il", "wloaders", 3)
 	bootstrapAssetsOfType(ctx, dm, "cat416", "wloaders", 3)
-}
-
-func init() {
-	bootstrapCmd.AddCommand(constructionDataCmd)
 }
 
 // Bootstraps device data for construction dataset.
