@@ -12,6 +12,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/devicechain-io/dc-device-management/model"
 	gql "github.com/devicechain-io/dcctl/graphql"
 	"github.com/spf13/cobra"
 )
@@ -240,8 +241,11 @@ func bootstrapAssetsOfType(ctx context.Context, dm gql.DeviceManagementClient, t
 				"vin": "%s",
 				"purchaseDate": "%s"
 			}`), vin, time.Now().Format("2006-01-02"))))
+		targets := model.EntityRelationshipCreateRequest{
+			TargetAsset: &vin,
+		}
 		dm.AssureAssetGroupRelationship(ctx, fmt.Sprintf("%s-contains-%s", agroup.GetToken(), vin),
-			agroup.GetToken(), vin, "contains", nil)
+			agroup.GetToken(), targets, "contains", nil)
 	}
 }
 
@@ -344,8 +348,12 @@ func bootstrapDeviceRelationshipTypes(ctx context.Context, dm gql.DeviceManageme
 // Bootstrap device relationships.
 func bootstrapDeviceRelationships(ctx context.Context, dm gql.DeviceManagementClient) {
 	// SDK7GV3WXZ3FBXZ tracksLocationOf WDVM4L7YPRM7HU2
+	vin := "WDVM4L7YPRM7HU2"
+	targets := model.EntityRelationshipCreateRequest{
+		TargetAsset: &vin,
+	}
 	dm.AssureDeviceRelationship(ctx, "SDK7GV3WXZ3FBXZ-tracksLocationOf-WDVM4L7YPRM7HU2",
-		"SDK7GV3WXZ3FBXZ", "WDVM4L7YPRM7HU2", "tracksLocationOf",
+		"SDK7GV3WXZ3FBXZ", targets, "tracksLocationOf",
 		unspace(`
 		{
 			"accuracy": "1 meter"
@@ -377,11 +385,20 @@ func bootstrapDeviceGroupRelationshipTypes(ctx context.Context, dm gql.DeviceMan
 // Bootstrap device group relationships.
 func bootstrapDeviceGroupRelationships(ctx context.Context, dm gql.DeviceManagementClient) {
 	// smalldoz contains SDK7GV3WXZ3FBXZ
+	vin1 := "SDK7GV3WXZ3FBXZ"
+	targets := model.EntityRelationshipCreateRequest{
+		TargetAsset: &vin1,
+	}
 	dm.AssureDeviceGroupRelationship(ctx, "smalldoz-contains-SDK7GV3WXZ3FBXZ",
-		"smalldoz", "SDK7GV3WXZ3FBXZ", "contains", nil)
+		"smalldoz", targets, "contains", nil)
+
 	// smalldoz contains WDVM4L7YPRM7HU2
+	vin2 := "SDK7GV3WXZ3FBXZ"
+	targets = model.EntityRelationshipCreateRequest{
+		TargetAsset: &vin2,
+	}
 	dm.AssureDeviceGroupRelationship(ctx, "smalldoz-contains-WDVM4L7YPRM7HU2",
-		"smalldoz", "WDVM4L7YPRM7HU2", "contains", nil)
+		"smalldoz", targets, "contains", nil)
 }
 
 // Create a random VIN of the given length.

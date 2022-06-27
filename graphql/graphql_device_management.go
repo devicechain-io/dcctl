@@ -134,12 +134,12 @@ func (dmc *DeviceManagementClient) ListDeviceRelationshipTypes(ctx context.Conte
 
 // Assure a device relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureDeviceRelationship(ctx context.Context, token string, source string,
-	target string, relation string, metadata *string) {
+	targets dmmodel.EntityRelationshipCreateRequest, relation string, metadata *string) {
 	assure("device relationship", token)
 	req := dmmodel.DeviceRelationshipCreateRequest{
 		Token:            token,
 		SourceDevice:     source,
-		TargetDevice:     target,
+		Targets:          targets,
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
@@ -240,14 +240,15 @@ func (dmc *DeviceManagementClient) ListDeviceGroupRelationshipTypes(ctx context.
 
 // Assure a device group relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureDeviceGroupRelationship(ctx context.Context,
-	token string, deviceGroup string, device string, relation string, metadata *string) {
+	token string, deviceGroup string, targets dmmodel.EntityRelationshipCreateRequest,
+	relation string, metadata *string) {
 	assure("device group relationship", token)
 	req := dmmodel.DeviceGroupRelationshipCreateRequest{
-		Token:            token,
-		DeviceGroup:      deviceGroup,
-		Device:           device,
-		RelationshipType: relation,
-		Metadata:         metadata,
+		Token:             token,
+		SourceDeviceGroup: deviceGroup,
+		Targets:           targets,
+		RelationshipType:  relation,
+		Metadata:          metadata,
 	}
 	resp, wascreated, err := dmgql.AssureDeviceGroupRelationship(ctx, dmc.Client, req)
 	if err != nil {
@@ -380,12 +381,12 @@ func (dmc *DeviceManagementClient) ListAssetRelationshipTypes(ctx context.Contex
 
 // Assure an asset relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureAssetRelationship(ctx context.Context, token string, source string,
-	target string, relation string, metadata *string) {
+	targets dmmodel.EntityRelationshipCreateRequest, relation string, metadata *string) {
 	assure("asset relationship", token)
 	req := dmmodel.AssetRelationshipCreateRequest{
 		Token:            token,
 		SourceAsset:      source,
-		TargetAsset:      target,
+		Targets:          targets,
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
@@ -485,12 +486,12 @@ func (dmc *DeviceManagementClient) ListAssetGroupRelationshipTypes(ctx context.C
 
 // Assure an asset group relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureAssetGroupRelationship(ctx context.Context, token string, assetGroup string,
-	asset string, relation string, metadata *string) {
+	targets dmmodel.EntityRelationshipCreateRequest, relation string, metadata *string) {
 	assure("asset group relationship", token)
 	req := dmmodel.AssetGroupRelationshipCreateRequest{
 		Token:            token,
-		AssetGroup:       assetGroup,
-		Asset:            asset,
+		SourceAssetGroup: assetGroup,
+		Targets:          targets,
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
@@ -623,12 +624,12 @@ func (dmc *DeviceManagementClient) ListAreaRelationshipTypes(ctx context.Context
 
 // Assure an area relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureAreaRelationship(ctx context.Context, token string, source string,
-	target string, relation string, metadata *string) {
+	targets dmmodel.EntityRelationshipCreateRequest, relation string, metadata *string) {
 	assure("area relationship", token)
 	req := dmmodel.AreaRelationshipCreateRequest{
 		Token:            token,
 		SourceArea:       source,
-		TargetArea:       target,
+		Targets:          targets,
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
@@ -729,12 +730,12 @@ func (dmc *DeviceManagementClient) ListAreaGroupRelationshipTypes(ctx context.Co
 
 // Assure an area group relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureAreaGroupRelationship(ctx context.Context, token string, areaGroup string,
-	area string, relation string, metadata *string) {
+	targets dmmodel.EntityRelationshipCreateRequest, relation string, metadata *string) {
 	assure("area group relationship", token)
 	req := dmmodel.AreaGroupRelationshipCreateRequest{
 		Token:            token,
-		AreaGroup:        areaGroup,
-		Area:             area,
+		SourceAreaGroup:  areaGroup,
+		Targets:          targets,
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
@@ -869,12 +870,12 @@ func (dmc *DeviceManagementClient) ListCustomerRelationshipTypes(ctx context.Con
 
 // Assure a customer relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureCustomerRelationship(ctx context.Context, token string, source string,
-	target string, relation string, metadata *string) {
+	targets dmmodel.EntityRelationshipCreateRequest, relation string, metadata *string) {
 	assure("customer relationship", token)
 	req := dmmodel.CustomerRelationshipCreateRequest{
 		Token:            token,
 		SourceCustomer:   source,
-		TargetCustomer:   target,
+		Targets:          targets,
 		RelationshipType: relation,
 		Metadata:         metadata,
 	}
@@ -975,14 +976,14 @@ func (dmc *DeviceManagementClient) ListCustomerGroupRelationshipTypes(ctx contex
 
 // Assure a customer group relationship (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureCustomerGroupRelationship(ctx context.Context, token string,
-	customerGroup string, customer string, relation string, metadata *string) {
+	customerGroup string, targets dmmodel.EntityRelationshipCreateRequest, relation string, metadata *string) {
 	assure("customer group relationship", token)
 	req := dmmodel.CustomerGroupRelationshipCreateRequest{
-		Token:            token,
-		CustomerGroup:    customerGroup,
-		Customer:         customer,
-		RelationshipType: relation,
-		Metadata:         metadata,
+		Token:               token,
+		SourceCustomerGroup: customerGroup,
+		Targets:             targets,
+		RelationshipType:    relation,
+		Metadata:            metadata,
 	}
 	resp, wascreated, err := dmgql.AssureCustomerGroupRelationship(ctx, dmc.Client, req)
 	if err != nil {
