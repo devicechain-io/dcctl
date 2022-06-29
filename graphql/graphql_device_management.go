@@ -101,13 +101,14 @@ func (dmc *DeviceManagementClient) ListDevices(ctx context.Context,
 
 // Assure a device relationship type (check for existing or create new).
 func (dmc *DeviceManagementClient) AssureDeviceRelationshipType(ctx context.Context, token string, name *string,
-	description *string, metadata *string) {
+	description *string, metadata *string, tracked bool) {
 	assure("device relationship type", token)
 	req := dmmodel.DeviceRelationshipTypeCreateRequest{
 		Token:       token,
 		Name:        name,
 		Description: description,
 		Metadata:    metadata,
+		Tracked:     tracked,
 	}
 	resp, wascreated, err := dmgql.AssureDeviceRelationshipType(ctx, dmc.Client, req)
 	if err != nil {

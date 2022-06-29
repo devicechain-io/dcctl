@@ -234,8 +234,8 @@ func bootstrapAssetsOfType(ctx context.Context, dm gql.DeviceManagementClient, t
 	agroup := agroups[groupToken]
 	for idx := 0; idx < count; idx++ {
 		vin := randomVin(15)
-		dm.AssureAsset(ctx, vin, atype.GetToken(), s(fmt.Sprintf("%s VIN:%s", atype.GetName(), vin)),
-			unspace(fmt.Sprintf("%s VIN:%s", atype.GetDescription(), vin)),
+		dm.AssureAsset(ctx, vin, atype.GetToken(), s(fmt.Sprintf("%s VIN:%s", *atype.GetName(), vin)),
+			unspace(fmt.Sprintf("%s VIN:%s", *atype.GetDescription(), vin)),
 			s(fmt.Sprintf(*unspace(`
 			{
 				"vin": "%s",
@@ -335,14 +335,14 @@ func bootstrapDeviceRelationshipTypes(ctx context.Context, dm gql.DeviceManageme
 		unspace(`
 		{
 			"accuracy": "1 meter"
-		}`))
+		}`), true)
 	// Tracks temperature of
 	dm.AssureDeviceRelationshipType(ctx, "tracksTempOf", s("Tracks temperature of"),
 		unspace(`The source device tracks the temperature of the target device`),
 		unspace(`
 		{
 			"accuracy": "1 degree C"
-		}`))
+		}`), false)
 }
 
 // Bootstrap device relationships.
